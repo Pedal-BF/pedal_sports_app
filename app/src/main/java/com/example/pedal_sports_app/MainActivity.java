@@ -1,3 +1,4 @@
+// 메인 시작
 package com.example.pedal_sports_app;
 
 import android.support.v7.app.AppCompatActivity;
