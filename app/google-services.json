@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "165999143699",
+    "project_id": "pedal-sports-app",
+    "storage_bucket": "pedal-sports-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:165999143699:android:dc9c768e654696d07488e6",
+        "android_client_info": {
+          "package_name": "com.bicontest.pedal_sports_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "165999143699-8kmooiida4k3309hh9pmfrenrv4mfgnl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0U0A6xf7zh7m_5Xc7QD5wMTss6GMI3FA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "165999143699-8kmooiida4k3309hh9pmfrenrv4mfgnl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
