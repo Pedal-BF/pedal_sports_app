@@ -7,32 +7,49 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
+import android.view.MenuItem;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FirebaseAuth mFirebaseAuth;
+    MainFragment mainFragment;
+    CommunityFragment communityFragment;
+    BookmarksFragment bookmarksFragment;
+    MypageFragment mypageFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mFirebaseAuth = FirebaseAuth.getInstance();
+        mainFragment = new MainFragment();
+        communityFragment = new CommunityFragment();
+        bookmarksFragment = new BookmarksFragment();
+        mypageFragment = new MypageFragment();
 
-        Button btn_logout = findViewById(R.id.btn_logout);
-        btn_logout.setOnClickListener(new View.OnClickListener() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.container, mainFragment).commit();
+        BottomNavigationView bottom_menu = findViewById(R.id.bottom_menu);
+        bottom_menu.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                // 로그아웃
-                mFirebaseAuth.signOut();
-
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(intent);
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch(item.getItemId()) {
+                    case R.id.main_tab:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.container, mainFragment).commit();
+                        return true;
+                    case R.id.community_tab:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.container, communityFragment).commit();
+                        return true;
+                    case R.id.bookmarks_tab:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.container, bookmarksFragment).commit();
+                        return true;
+                    case R.id.mypage_tab:
+                        getSupportFragmentManager().beginTransaction().replace(R.id.container, mypageFragment).commit();
+                        return true;
+                }
+                return false;
             }
         });
-
-        // 탈퇴
-        // mFirebaseAuth.getCurrentUser().delete();
     }
 }

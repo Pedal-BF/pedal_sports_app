@@ -36,6 +36,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="가입 완료"
+        android:backgroundTint="#25db6e"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
