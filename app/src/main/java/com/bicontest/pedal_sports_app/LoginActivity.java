@@ -27,6 +27,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //Intent intent = new Intent(LoginActivity.this, LoadingActivity.class);
+        //startActivity(intent);
+
         mFirebaseAuth = FirebaseAuth.getInstance();
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("Pedal");
 

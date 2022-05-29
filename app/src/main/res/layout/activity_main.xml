@@ -13,7 +13,17 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="#345e86"
-        android:layout_alignParentTop="true"></RelativeLayout>
+        android:layout_alignParentTop="true">
+
+        <EditText
+            android:id="@+id/editSearch"
+            android:layout_width="800px"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:hint="검색어를 입력하세요." />
+
+    </RelativeLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
