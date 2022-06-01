@@ -2,6 +2,8 @@ package com.bicontest.pedal_sports_app;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -57,6 +59,10 @@ public class RegisterActivity extends AppCompatActivity {
                             mDatabaseRef.child("UserAccount").child(firebaseUser.getUid()).setValue(account);
 
                             Toast.makeText(RegisterActivity.this, "회원가입에 성공하셨습니다.", Toast.LENGTH_SHORT).show();
+
+                            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class); // 로그인 페이지로 이동
+                            startActivity(intent);
+
                         } else {
                             Toast.makeText(RegisterActivity.this, "회원가입에 실패하셨습니다.", Toast.LENGTH_SHORT).show();
                         }
