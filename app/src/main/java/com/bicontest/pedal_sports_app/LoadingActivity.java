@@ -16,6 +16,7 @@ public class LoadingActivity extends AppCompatActivity {
         startLoading();
     }
 
+    // 로딩 페이지 2초간 실행
     private void startLoading() {
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
