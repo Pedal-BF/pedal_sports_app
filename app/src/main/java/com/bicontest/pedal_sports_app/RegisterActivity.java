@@ -27,7 +27,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private DatabaseReference mDatabaseRef;              // 실시간 데이터베이스
     private EditText mEtEmail, mEtPwd;                   // 회원가입 입력필드
-    private Button mBtnCheckEmail, mBtnRegister;         // 이메일 인증, 회원가입 버튼
+    private Button mBtnRegister;                         //회원가입 버튼
 
     // 비밀번호 정규식: 영어 대/소문자, 숫자, 특수문자 조합 8~16자
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,16}$");
@@ -41,7 +41,6 @@ public class RegisterActivity extends AppCompatActivity {
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("Pedal");
 
         mEtEmail = findViewById(R.id.et_email);             // 이메일 입력 필드
-        mBtnCheckEmail = findViewById(R.id.btn_checkEmail); // 이메일 인증 버튼
         mEtPwd = findViewById(R.id.et_pwd);                 // 비밀번호 입력 필드
         mBtnRegister = findViewById(R.id.btn_register);     // 회원가입 버튼
 
@@ -90,9 +89,30 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
     // 이메일 인증 확인
-    /*private boolean checkEmail() {
+    private boolean checkEmail(String strEmail, String strPwd) {
+        // 로그인
+        mFirebaseAuth.signInWithEmailAndPassword(strEmail, strPwd);
+        FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
 
-    }*/
+        firebaseUser.sendEmailVerification()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(RegisterActivity.this, "인증 메일을 전송했습니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+        // 로그아웃
+        mFirebaseAuth.signOut();
+
+        // 회원 탈퇴
+        // firebaseUser.delete();                                                        // Authentication에서 계정 정보 삭제
+        // mDatabaseRef.child("UserAccount").child(firebaseUser.getUid()).removeValue(); // Realtime Datebase에서 계정 정보 삭제
+
+        return true;
+    }
 
     // 회원가입 진행
     private void createUser(String strEmail, String strPwd) {
@@ -110,7 +130,9 @@ public class RegisterActivity extends AppCompatActivity {
                     // setValue: database에 insert (삽입) 행위
                     mDatabaseRef.child("UserAccount").child(firebaseUser.getUid()).setValue(account);
 
-                    Toast.makeText(RegisterActivity.this, "회원가입에 성공하셨습니다.", Toast.LENGTH_SHORT).show();
+                    checkEmail(strEmail, strPwd);
+
+                    //Toast.makeText(RegisterActivity.this, "회원가입에 성공하셨습니다.", Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(RegisterActivity.this, LoginActivity.class); // 로그인 페이지로 이동
                     startActivity(intent);
