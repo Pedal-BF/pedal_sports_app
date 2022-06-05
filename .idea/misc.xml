@@ -3,6 +3,12 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Pedal/pedal_sports_app/app/src/main/res/layout/activity_loading.xml" value="0.21203703703703702" />
+        <entry key="..\:/Pedal/pedal_sports_app/app/src/main/res/layout/activity_login.xml" value="0.21203703703703702" />
+        <entry key="..\:/Pedal/pedal_sports_app/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Pedal/pedal_sports_app/app/src/main/res/layout/activity_register.xml" value="0.21203703703703702" />
+        <entry key="..\:/Pedal/pedal_sports_app/app/src/main/res/layout/fragment_main.xml" value="0.1" />
+        <entry key="..\:/Pedal/pedal_sports_app/app/src/main/res/menu/bottom_menu.xml" value="0.21203703703703702" />
         <entry key="..\:/android/Pedal_sports_app/app/src/main/res/layout/activity_loading.xml" value="0.1" />
         <entry key="..\:/android/Pedal_sports_app/app/src/main/res/layout/activity_login.xml" value="0.1" />
         <entry key="..\:/android/Pedal_sports_app/app/src/main/res/layout/activity_main.xml" value="0.2" />
@@ -20,5 +26,12 @@
   </component>
   <component name="ProjectType">
     <option name="id" value="Android" />
+  </component>
+  <component name="VisualizationToolProject">
+    <option name="state">
+      <ProjectState>
+        <option name="scale" value="0.1" />
+      </ProjectState>
+    </option>
   </component>
 </project>
