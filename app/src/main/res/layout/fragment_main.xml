@@ -18,11 +18,10 @@
 
             <!-- 광고창? -->
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/adImage"
                 android:layout_width="match_parent"
                 android:layout_height="198dp"
-                android:layout_marginTop="60dp"
-                tools:src="@tools:sample/avatars" />
+                android:layout_marginTop="60dp" />
 
             <!-- 큰 제목 - 추천 영상 -->
             <TextView
