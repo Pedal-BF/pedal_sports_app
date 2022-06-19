@@ -12,7 +12,7 @@
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:background="#345e86"
+        android:background="#ffffff"
         android:layout_alignParentTop="true">
 
         <EditText
@@ -32,14 +32,23 @@
 
     </FrameLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:layout_above="@+id/bottom_menu"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="-2dp"
+        android:background="@drawable/upper_shadow_menu"
+        android:orientation="vertical" />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_menu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#345E86"
-        app:itemIconTint="#FFFFFF"
-        app:itemTextColor="#f6d170"
+        android:background="#ffffff"
+        app:itemIconTint="#969696"
+        app:itemTextColor="#969696"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_menu" />
