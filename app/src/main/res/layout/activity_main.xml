@@ -40,7 +40,7 @@
         android:background="#345E86"
         app:itemIconTint="#FFFFFF"
         app:itemTextColor="#f6d170"
-        app:labelVisibilityMode="labeled"
+        app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_menu" />
 
