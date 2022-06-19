@@ -6,6 +6,7 @@
     android:id="@+id/parent_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffff"
     tools:context=".MypageFragment">
 
     <TextView
@@ -15,36 +16,34 @@
         android:layout_above="@+id/btn_logout"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginStart="167dp"
-        android:layout_marginEnd="167dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginStart="168dp"
+        android:layout_marginEnd="165dp"
+        android:layout_marginBottom="65dp"
         android:text="마이 페이지" />
 
     <Button
         android:id="@+id/btn_logout"
-        android:layout_width="wrap_content"
+        android:layout_width="151dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="160dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="160dp"
-        android:layout_marginBottom="240dp"
+        android:layout_marginStart="131dp"
+        android:layout_marginEnd="131dp"
+        android:layout_marginBottom="260dp"
         android:backgroundTint="#4C25DB"
         android:text="로그아웃" />
 
     <Button
         android:id="@+id/btn_userdelete"
-        android:layout_width="wrap_content"
+        android:layout_width="149dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginStart="160dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="160dp"
-        android:layout_marginBottom="188dp"
+        android:layout_marginStart="131dp"
+        android:layout_marginEnd="131dp"
+        android:layout_marginBottom="204dp"
         android:backgroundTint="#4C25DB"
         android:text="탈퇴하기" />
 
