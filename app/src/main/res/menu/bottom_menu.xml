@@ -7,17 +7,23 @@
         android:id="@+id/main_tab"
         app:showAsAction="always"
         android:enabled="true"
-        android:title="Main" />
+        android:icon="@drawable/main"
+        android:title="Main">
+    </item>
+
     <item
         android:id="@+id/community_tab"
         app:showAsAction="always"
         android:enabled="true"
-        android:title="Community"/>
+        android:icon="@drawable/community"
+        android:title="Community">
+    </item>
 
     <item
         android:id="@+id/bookmarks_tab"
         app:showAsAction="always"
         android:enabled="true"
+        android:icon="@drawable/bookmark"
         android:title="Bookmarks">
     </item>
 
@@ -25,6 +31,7 @@
         android:id="@+id/mypage_tab"
         app:showAsAction="always"
         android:enabled="true"
+        android:icon="@drawable/mypage"
         android:title="Mypage">
     </item>
 
