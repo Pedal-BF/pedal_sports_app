@@ -47,10 +47,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="#ffffff"
-        app:elevation="0dp"
         app:itemIconTint="#969696"
         app:itemTextColor="#969696"
-        app:labelVisibilityMode="labeled"
+        app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_menu" />
 
