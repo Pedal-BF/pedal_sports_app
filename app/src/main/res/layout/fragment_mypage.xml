@@ -19,6 +19,7 @@
         android:layout_marginStart="168dp"
         android:layout_marginEnd="165dp"
         android:layout_marginBottom="65dp"
+        android:textColor="@color/black"
         android:text="마이 페이지" />
 
     <Button

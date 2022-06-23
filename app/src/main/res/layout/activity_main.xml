@@ -13,13 +13,16 @@
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="#ffffff"
-        android:layout_alignParentTop="true">
+        android:layout_alignParentTop="true"
+        android:elevation="15dp">
 
         <EditText
             android:id="@+id/editSearch"
             android:layout_width="800px"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
+            android:backgroundTint="@color/black"
+            android:textColorHint="#adadad"
             android:hint="검색어를 입력하세요." />
 
     </RelativeLayout>
@@ -47,8 +50,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="#ffffff"
-        app:itemIconTint="#969696"
-        app:itemTextColor="#969696"
+        app:itemIconTint="@color/black"
+        app:itemIconSize="33dp"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_menu" />
