@@ -1,33 +1,37 @@
 package com.bicontest.pedal_sports_app;
 
-//import android.net.Uri;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-//import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-/*import android.widget.ImageView;
+import android.widget.ImageView;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStreamReader;
-import java.net.URL;*/
+import javax.net.ssl.HttpsURLConnection;
 
 public class MainFragment extends Fragment {
-    // 서울올림픽기념국민체육진흥공단_국민체력100_운동처방_동영상정보
-    //private String SeoulExerciseKey = "7VgAbrUNHG0BQOPUubAEEkOT45PoaRK6TR92eLuGBsfqyhspb%2BY1oOyrwqIeWXYGrSVw9vMreaGpnekwpR8pGw%3D%3D";   // 인증키 (개인이 받아와야함)
-    //private String SeoulExerciseLimitPage = "248";  // 248
-    //private String SeoulExerciseJson;        // 파싱한 데이터를 저장할 변수
-    //private JSONObject SeoulJSONObject;
-    //private JSONArray SeoulJSONArray;
 
-    //private ImageView youtubeImage;
+    private ImageView adSlideImage;  // 슬라이드 광고 부분 이미지
+    Bitmap bitmap, bitmap2;
+
+    private ImageView recommedImage; // 추천 영상 이미지
+
+    private String[] imagesUrl = new String[] {
+            "https://img.youtube.com/vi/MfZf-hV9mPw/sddefault.jpg",
+            "https://img.youtube.com/vi/auU6iQ5v_bU/sddefault.jpg",
+            "https://img.youtube.com/vi/rsaERcPAKWQ/sddefault.jpg",
+            "https://img.youtube.com/vi/XnXaUt2TvPo/sddefault.jpg",
+            "https://img.youtube.com/vi/_ka09IuBOf4/sddefault.jpg"
+    };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,31 +39,80 @@ public class MainFragment extends Fragment {
         // fragment에서 findViewById를 하기 위한 세팅
         View v = inflater.inflate(R.layout.fragment_main, container, false);
 
-        //https://youtu.be/MfZf-hV9mPw
-        /*String youtubeThumbnail= "https://img.youtube.com/vi/MfZf-hV9mPw/default.jpg";
-        youtubeImage = view.findViewById(R.id.adImage);
-        try {
-            Uri uri = Uri.parse(youtubeThumbnail);
-            youtubeImage.setImageURI(uri);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
+        adSlideImage = v.findViewById(R.id.ad_slide);
+        recommedImage = v.findViewById(R.id.recommed_image);
 
-        /*
-        // 서울올림픽기념국민체육진흥공단_국민체력100_운동처방_동영상정보 API에서 JSON 형태로 데이터 받아오기
+        //https://youtu.be/MfZf-hV9mPw
+        //String youtubeThumbnail= "https://img.youtube.com/vi/MfZf-hV9mPw/default.jpg";
+        Thread mTread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL("https://img.youtube.com/vi/MfZf-hV9mPw/sddefault.jpg");
+
+                    // Youtube에서 이미지를 가져오고 ImageView에 저장할 Bitmap 생성
+                    HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+                    conn.setDoInput(true); // 서버로부터 응답 수신
+                    conn.connect();
+
+                    InputStream is = conn.getInputStream(); // InputStream 값 가져오기
+                    bitmap = BitmapFactory.decodeStream(is); // Bitmap으로 변환
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        mTread.start();
+
         try {
-            URL url = new URL("https://api.odcloud.kr/api/15084814/v1/uddi:3f8d6b98-0082-4792-92a8-90d40ecc4bce?page=1&perPage=" + SeoulExerciseLimitPage +"&serviceKey=" + SeoulExerciseKey );
-            BufferedReader bf = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
-            SeoulExerciseJson = bf.readLine();
-            bf.close();
-            SeoulJSONObject = new JSONObject(SeoulExerciseJson);
-            String contents = SeoulJSONObject.getString("data");
-            SeoulJSONArray = new JSONArray(contents);
-            Log.v("API", "log test");
-        }catch(Exception e) {
+            // join()을 호출하여, 별도의 작업 Thread가 작업을 완료할 때까지 메인 Thread가 기다리게 함
+            mTread.join();
+
+            // 작업 Thread에서 이미지 불러오는 작업을 완료한 뒤, 메인 Thread에서 ImageView에 이미지 지정
+            adSlideImage.setImageBitmap(bitmap);
+        } catch (InterruptedException e) {
             e.printStackTrace();
-        }*/
+        }
+
+        recommendImageSet();
 
         return v;
+    }
+    public void recommendImageSet() {
+        Thread mTread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    URL url = new URL(imagesUrl[1]);
+
+                    // Youtube에서 이미지를 가져오고 ImageView에 저장할 Bitmap 생성
+                    HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+                    conn.setDoInput(true); // 서버로부터 응답 수신
+                    conn.connect();
+
+                    InputStream is = conn.getInputStream(); // InputStream 값 가져오기
+                    bitmap2 = BitmapFactory.decodeStream(is); // Bitmap으로 변환
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        mTread.start();
+
+        try {
+            // join()을 호출하여, 별도의 작업 Thread가 작업을 완료할 때까지 메인 Thread가 기다리게 함
+            mTread.join();
+
+            // 작업 Thread에서 이미지 불러오는 작업을 완료한 뒤, 메인 Thread에서 ImageView에 이미지 지정
+            recommedImage.setImageBitmap(bitmap2);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

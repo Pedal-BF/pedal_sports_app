@@ -18,11 +18,36 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:text="메인1" />
+            <ImageView
+                android:id="@+id/ad_slide"
+                android:layout_width="match_parent"
+                android:layout_height="230dp"
+                android:scaleType="centerCrop"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
+
+                <TextView
+                    android:id="@+id/recommed_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="20dp"
+                    android:text="노허조님을 위한 추천"
+                    android:textColor="#707070"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/recommed_image"
+                    android:layout_width="200dp"
+                    android:layout_height="110dp"
+                    android:layout_below="@+id/recommed_title"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="20dp"
+                    android:scaleType="centerCrop" />
+
+            </RelativeLayout>
 
             <TextView
                 android:layout_width="wrap_content"

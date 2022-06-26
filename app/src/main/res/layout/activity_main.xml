@@ -23,6 +23,7 @@
             android:layout_centerInParent="true"
             android:backgroundTint="@color/black"
             android:textColorHint="#adadad"
+            android:textColor="@color/black"
             android:hint="검색어를 입력하세요." />
 
     </RelativeLayout>
