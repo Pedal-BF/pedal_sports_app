@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parent_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffff"
     tools:context=".MainFragment">
 
     <ScrollView
@@ -15,378 +18,54 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- 광고창? -->
             <ImageView
-                android:id="@+id/imageView"
+                android:id="@+id/ad_slide"
                 android:layout_width="match_parent"
-                android:layout_height="198dp"
-                android:layout_marginTop="60dp"
-                tools:src="@tools:sample/avatars" />
+                android:layout_height="230dp"
+                android:scaleType="centerCrop"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" >
 
-            <!-- 큰 제목 - 추천 영상 -->
-            <TextView
-                android:id="@+id/recommend"
-                android:layout_width="180dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginEnd="244dp"
-                android:layout_marginBottom="478dp"
-                android:text="회원님을 위한 추천 영상"
-                android:textSize="16sp" />
+                <TextView
+                    android:id="@+id/recommed_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="20dp"
+                    android:text="노허조님을 위한 추천"
+                    android:textColor="#707070"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-            <!-- 영상 섬네일 - 추천 영상 -->
-            <ImageView
-                android:id="@+id/thumbnail1"
-                android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="-460dp"
-                android:layout_marginEnd="50dp"
-                android:layout_marginBottom="394dp"
-                tools:src="@tools:sample/avatars" />
+                <ImageView
+                    android:id="@+id/recommed_image"
+                    android:layout_width="200dp"
+                    android:layout_height="110dp"
+                    android:layout_below="@+id/recommed_title"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="20dp"
+                    android:scaleType="centerCrop" />
 
-            <ImageView
-                android:id="@+id/thumbnail2"
-                android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:layout_marginStart="210dp"
-                android:layout_marginTop="-475dp"
-                android:layout_marginEnd="73dp"
-                android:layout_marginBottom="394dp"
-                tools:src="@tools:sample/avatars" />
-
-            <!-- 영상제목 - 추천 영상 -->
-            <TextView
-                android:id="@+id/video1"
-                android:layout_width="83dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="-385dp"
-                android:layout_marginEnd="315dp"
-                android:layout_marginBottom="373dp"
-                android:text="영상제목1" />
+            </RelativeLayout>
 
             <TextView
-                android:id="@+id/video2"
-                android:layout_width="83dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="210dp"
-                android:layout_marginTop="-393dp"
-                android:layout_marginEnd="188dp"
-                android:layout_marginBottom="500dp"
-                android:text="영상제목2" />
-
-            <!-- 큰 제목 - 업데이트 영상 -->
-            <TextView
-                android:id="@+id/part1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="-468dp"
-                android:layout_marginEnd="244dp"
-                android:layout_marginBottom="320dp"
-                android:text="새로 업데이트 된 영상"
-                android:textSize="16sp" />
-
-            <!-- 영상 섬네일 - 업데이트 부분 -->
-            <ImageView
-                android:id="@+id/thumbnail3"
-                android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="-302dp"
-                android:layout_marginEnd="50dp"
-                android:layout_marginBottom="235dp"
-                tools:src="@tools:sample/avatars" />
-
-            <ImageView
-                android:id="@+id/thumbnail4"
-                android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:layout_marginStart="210dp"
-                android:layout_marginTop="-316dp"
-                android:layout_marginEnd="73dp"
-                android:layout_marginBottom="235dp"
-                tools:src="@tools:sample/avatars" />
-
-            <!-- 영상제목 - 업데이트 영상 -->
-            <TextView
-                android:id="@+id/video3"
-                android:layout_width="83dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="-227dp"
-                android:layout_marginEnd="312dp"
-                android:layout_marginBottom="215dp"
-                android:text="영상제목3" />
+                android:textColor="@color/black"
+                android:text="메인2" />
 
             <TextView
-                android:id="@+id/video4"
-                android:layout_width="83dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="210dp"
-                android:layout_marginTop="-235dp"
-                android:layout_marginEnd="134dp"
-                android:layout_marginBottom="215dp"
-                android:text="영상제목4" />
-
-            <!-- 큰 제목 - 이전 영상 -->
-            <TextView
-                android:id="@+id/part2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="-180dp"
-                android:layout_marginEnd="244dp"
-                android:layout_marginBottom="320dp"
-                android:text="이전에 본 영상"
-                android:textSize="16sp" />
-
-            <!-- 영상 섬네일 - 이전 영상 -->
-            <ImageView
-                android:id="@+id/thumbnail5"
-                android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="-300dp"
-                android:layout_marginEnd="50dp"
-                tools:src="@tools:sample/avatars" />
-
-            <ImageView
-                android:id="@+id/thumbnail6"
-                android:layout_width="129dp"
-                android:layout_height="80dp"
-                android:layout_marginStart="210dp"
-                android:layout_marginTop="-80dp"
-                android:layout_marginEnd="210dp"
-                tools:src="@tools:sample/avatars" />
-
-            <!-- 영상제목 - 이전 영상 -->
-            <TextView
-                android:id="@+id/video5"
-                android:layout_width="83dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="7dp"
-                android:layout_marginEnd="312dp"
-                android:layout_marginBottom="103dp"
-                android:text="영상제목5" />
+                android:textColor="@color/black"
+                android:text="메인3" />
 
             <TextView
-                android:id="@+id/video6"
-                android:layout_width="83dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="210dp"
-                android:layout_marginTop="-122dp"
-                android:layout_marginEnd="134dp"
-                android:layout_marginBottom="103dp"
-                android:text="영상제목6" />
-
-            <!-- 큰 제목 - 전신 운동 -->
-            <TextView
-                android:id="@+id/part3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="-65dp"
-                android:layout_marginEnd="244dp"
-                android:layout_marginBottom="320dp"
-                android:text="전신 운동"
-                android:textSize="16sp" />
-
-            <!-- 영상 섬네일 - 전신 영상 -->
-            <ImageView
-                android:id="@+id/thumbnail7"
-                android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="-300dp"
-                android:layout_marginEnd="50dp"
-                tools:src="@tools:sample/avatars" />
-
-            <ImageView
-                android:id="@+id/thumbnail8"
-                android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:layout_marginStart="210dp"
-                android:layout_marginTop="-80dp"
-                android:layout_marginEnd="73dp"
-                android:layout_marginBottom="235dp"
-                tools:src="@tools:sample/avatars" />
-
-            <ImageView
-                android:id="@+id/thumbnail9"
-                android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="-180dp"
-                android:layout_marginEnd="150dp"
-                tools:src="@tools:sample/avatars" />
-
-            <ImageView
-                android:id="@+id/thumbnail10"
-                android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:layout_marginStart="210dp"
-                android:layout_marginTop="-80dp"
-                android:layout_marginEnd="73dp"
-                android:layout_marginBottom="235dp"
-                tools:src="@tools:sample/avatars" />
-
-            <!-- 영상제목 - 전신 영상 -->
-            <TextView
-                android:id="@+id/video7"
-                android:layout_width="83dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="-364dp"
-                android:layout_marginEnd="312dp"
-                android:layout_marginBottom="103dp"
-                android:text="영상제목7" />
-
-            <TextView
-                android:id="@+id/video8"
-                android:layout_width="83dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="210dp"
-                android:layout_marginTop="-122dp"
-                android:layout_marginEnd="312dp"
-                android:layout_marginBottom="103dp"
-                android:text="영상제목8" />
-
-            <TextView
-                android:id="@+id/video9"
-                android:layout_width="83dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="13dp"
-                android:layout_marginEnd="312dp"
-                android:layout_marginBottom="103dp"
-                android:text="영상제목9" />
-
-            <TextView
-                android:id="@+id/video10"
-                android:layout_width="83dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="210dp"
-                android:layout_marginTop="-122dp"
-                android:layout_marginEnd="312dp"
-                android:layout_marginBottom="103dp"
-                android:text="영상제목10" />
-
-            <!-- 큰 제목 - 하체 운동 -->
-            <TextView
-                android:id="@+id/part4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="-40dp"
-                android:layout_marginEnd="244dp"
-                android:layout_marginBottom="320dp"
-                android:text="하체 운동"
-                android:textSize="16sp" />
-
-            <!-- 영상 섬네일 - 하체 영상 -->
-            <ImageView
-                android:id="@+id/thumbnail11"
-                android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="-300dp"
-                android:layout_marginEnd="50dp"
-                tools:src="@tools:sample/avatars" />
-
-            <ImageView
-                android:id="@+id/thumbnail12"
-                android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:layout_marginStart="210dp"
-                android:layout_marginTop="-80dp"
-                android:layout_marginEnd="73dp"
-                android:layout_marginBottom="235dp"
-                tools:src="@tools:sample/avatars" />
-
-            <ImageView
-                android:id="@+id/thumbnail13"
-                android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="-170dp"
-                android:layout_marginEnd="50dp"
-                tools:src="@tools:sample/avatars" />
-
-            <ImageView
-                android:id="@+id/thumbnail14"
-                android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:layout_marginStart="210dp"
-                android:layout_marginTop="-80dp"
-                android:layout_marginEnd="73dp"
-                android:layout_marginBottom="235dp"
-                tools:src="@tools:sample/avatars" />
-
-            <!-- 영상 제목 - 하체 영상 -->
-            <TextView
-                android:id="@+id/video11"
-                android:layout_width="83dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="-374dp"
-                android:layout_marginEnd="312dp"
-                android:layout_marginBottom="103dp"
-                android:text="영상제목11" />
-
-            <TextView
-                android:id="@+id/video12"
-                android:layout_width="83dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="210dp"
-                android:layout_marginTop="-122dp"
-                android:layout_marginEnd="312dp"
-                android:layout_marginBottom="103dp"
-                android:text="영상제목12" />
-
-            <TextView
-                android:id="@+id/video13"
-                android:layout_width="83dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="23dp"
-                android:layout_marginEnd="312dp"
-                android:layout_marginBottom="103dp"
-                android:text="영상제목13" />
-
-            <TextView
-                android:id="@+id/video14"
-                android:layout_width="83dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="210dp"
-                android:layout_marginTop="-121dp"
-                android:layout_marginEnd="312dp"
-                android:layout_marginBottom="103dp"
-                android:text="영상제목14" />
-
-            <!-- 전신운동 밑에 플러스 -->
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/ActionButton1"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="170dp"
-                android:layout_marginTop="-458dp"
-                android:layout_marginEnd="210dp"
-                android:clickable="true"
-                android:src="@android:drawable/ic_menu_more" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/ActionButton2"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="170dp"
-                android:layout_marginTop="335dp"
-                android:layout_marginEnd="210dp"
-                android:clickable="true"
-                android:src="@android:drawable/ic_menu_more" />
+                android:textColor="@color/black"
+                android:text="메인4" />
 
         </LinearLayout>
     </ScrollView>
