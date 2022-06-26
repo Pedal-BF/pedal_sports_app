@@ -11,48 +11,161 @@
         android:id="@+id/et_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="256dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="196dp"
         android:ems="10"
-        android:hint="이메일을 입력하세요"
+        android:hint="  email"
         android:inputType="textEmailAddress"
+        app:layout_constraintBottom_toTopOf="@+id/btn_register"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.328"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_nickname" />
+
+    <Button
+        android:id="@+id/btn_emailcheck"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="9dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginBottom="179dp"
+        android:backgroundTint="#EAEAEA"
+        android:text="이메일 인증"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_register"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/et_email"
+        app:layout_constraintTop_toBottomOf="@+id/btn_nicknamecheck" />
+
+    <Button
+        android:id="@+id/btn_register"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:backgroundTint="#111111"
+        android:text="가입 완료"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btn_pwdcheck"
+        android:layout_width="100dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="9dp"
+        android:layout_marginTop="61dp"
+        android:layout_marginEnd="36dp"
+        android:backgroundTint="#EAEAEA"
+        android:text="비밀번호 확인"
+        android:textSize="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/et_pwdcheck"
+        app:layout_constraintTop_toBottomOf="@+id/btn_idcheck" />
+
+    <EditText
+        android:id="@+id/et_name"
+        android:layout_width="210dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="156dp"
+        android:layout_marginBottom="25dp"
+        android:ems="10"
+        android:hint="  name"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/et_id"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.333"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btn_emailcheck"
+    <EditText
+        android:id="@+id/et_id"
+        android:layout_width="210dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="240dp"
+        android:layout_marginBottom="5dp"
+        android:ems="10"
+        android:hint="  id"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/et_pwd"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/et_nickname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="256dp"
-        android:backgroundTint="#89b6f5"
-        android:text="이메일 인증"
+        android:layout_marginBottom="5dp"
+        android:ems="10"
+        android:hint="  nickname"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/et_email"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.261"
-        app:layout_constraintStart_toEndOf="@+id/et_email"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintHorizontal_bias="0.328"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_pwdcheck" />
 
     <EditText
         android:id="@+id/et_pwd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:ems="10"
-        android:hint="비밀번호를 입력하세요"
+        android:hint="  password"
         android:inputType="textPassword"
+        app:layout_constraintBottom_toTopOf="@+id/et_pwdcheck"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.333"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_email" />
+        app:layout_constraintTop_toBottomOf="@+id/et_id" />
+
+    <EditText
+        android:id="@+id/et_pwdcheck"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="25dp"
+        android:ems="10"
+        android:hint="  password"
+        android:inputType="textPassword"
+        app:layout_constraintBottom_toTopOf="@+id/et_nickname"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.333"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/et_pwd" />
 
     <Button
-        android:id="@+id/btn_register"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="가입 완료"
-        android:backgroundTint="#25db6e"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/btn_idcheck"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="9dp"
+        android:layout_marginTop="206dp"
+        android:layout_marginEnd="36dp"
+        android:backgroundTint="#EAEAEA"
+        android:text="중복 확인"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_pwdcheck"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/et_id"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btn_nicknamecheck"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="9dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="36dp"
+        android:layout_marginBottom="4dp"
+        android:backgroundTint="#EAEAEA"
+        android:text="중복 확인"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_emailcheck"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/et_nickname"
+        app:layout_constraintTop_toBottomOf="@+id/btn_pwdcheck" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
