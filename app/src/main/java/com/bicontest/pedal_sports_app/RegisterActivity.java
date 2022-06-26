@@ -16,22 +16,27 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
 
-    private FirebaseAuth mFirebaseAuth;                  // 파이어베이스 인증
+    private FirebaseAuth mFirebaseAuth;                                          // 파이어베이스 인증
 
-    private DatabaseReference mDatabaseRef;              // 실시간 데이터베이스
-    private EditText mEtEmail, mEtPwd;                   // 회원가입 입력필드
-    private Button mBtnEmailCheck;                       // 이메일 인증 버튼
-    private Button mBtnRegister;                         // 회원가입 버튼
+    private DatabaseReference mDatabaseRef;                                      // 실시간 데이터베이스
+    private EditText mEtEmail, mEtPwd, mEtPwdCheck, mEtNickname, mEtId, mEtName; // 회원가입 입력필드
+    private Button mBtnEmailCheck;                                               // 이메일 인증 버튼
+    private Button mBtnIdCheck;                                                  // 아이디 중복 확인 버튼
+    private Button mBtnPwdCheck;                                                 // 비밀번호 확인 버튼
+    private Button mBtnNicknameCheck;                                            // 닉네임 중복 확인 버튼
+    private Button mBtnRegister;                                                 // 회원가입 버튼
 
-    private String samplePass = "check1234&";            // 이메일 인증용 임시 비번
-    private Boolean checkEmail = false;                  // 이메일 인증 확인
+    private String samplePass = "check1234&";                                    // 이메일 인증용 임시 비번
+    private Boolean checkEmail = false;                                          // 이메일 인증 확인
 
     // 비밀번호 정규식: 영어 대/소문자, 숫자, 특수문자 조합 8~16자
     private static final Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,16}$");
@@ -44,11 +49,60 @@ public class RegisterActivity extends AppCompatActivity {
         mFirebaseAuth = FirebaseAuth.getInstance();
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("Pedal");
 
-        mEtEmail = findViewById(R.id.et_email);             // 이메일 입력 필드
-        mBtnEmailCheck = findViewById(R.id.btn_emailcheck); // 이메일 인중 버튼
-        mEtPwd = findViewById(R.id.et_pwd);                 // 비밀번호 입력 필드
-        mBtnRegister = findViewById(R.id.btn_register);     // 회원가입 버튼
+        mEtEmail = findViewById(R.id.et_email);                 // 이메일 입력 필드
+        mBtnEmailCheck = findViewById(R.id.btn_emailcheck);     // 이메일 인증 버튼
+        mEtId = findViewById(R.id.et_id);                       // 아이디 입력 필드
+        mEtPwd = findViewById(R.id.et_pwd);                     // 비밀번호 입력 필드
+        mEtPwdCheck = findViewById(R.id.et_pwdcheck);           // 비밀번호 재입력 필드
+        mEtName = findViewById(R.id.et_name);                   // 이름 입력 필드
+        mEtNickname = findViewById(R.id.et_nickname);           // 닉네임 입력 필드
 
+        mBtnIdCheck = findViewById(R.id.btn_idcheck);               // 아이디 중복 확인 버튼
+        mBtnPwdCheck = findViewById(R.id.btn_pwdcheck);             // 비밀번호 확인 버튼
+        mBtnNicknameCheck = findViewById(R.id.btn_nicknamecheck);   // 닉네임 중복 확인 버튼
+        mBtnRegister = findViewById(R.id.btn_register);             // 회원가입 버튼
+
+        // 아이디 중복 확인 버튼 클릭 시
+//        mBtnIdCheck.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                final String userID = mEtId.getText().toString().trim();
+//                idCheck.addListnerForSingleValueEvent(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                        for (DataSnapshot userSnapshot : snapshot.getChildren()) {
+//                            String userID2 = userSnapshot.child("userid").getValue().toString();
+//
+//                            if (userID.equals(userID2)) {
+//                                Toast.makeText(getApplicationContext(), "이미 존재하는 아이디입니다.", Toast.LENGTH_SHORT).show();
+//                            }
+//                            else {
+//                                Toast.makeText(getApplicationContext(), "사용 가능한 아이디입니다.", Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    }
+//                });
+//            }
+//        });
+        // 닉네임 중복 확인 버튼 클릭 시
+        mBtnNicknameCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+        // 비밀번호 확인 버튼 클릭 시
+        mBtnPwdCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!mEtPwd.getText().toString().equals(mEtPwdCheck.getText().toString())) {
+                    Toast.makeText(RegisterActivity.this, "비밀번호가 일치하지 않습니다!", Toast.LENGTH_SHORT).show();
+                    mEtPwdCheck.setText("");
+                    mEtPwdCheck.requestFocus();
+                    return;
+                }
+            }
+        });
         // 이메일 인증 버튼 클릭 시
         mBtnEmailCheck.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,17 +119,19 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
-
         // 회원가입 버튼 클릭 시
         mBtnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 // 회원가입 처리 시작
                 String strEmail = mEtEmail.getText().toString();
+                String strId = mEtId.getText().toString();
                 String strPwd = mEtPwd.getText().toString();
+                String strName = mEtName.getText().toString();
+                String strNickname = mEtNickname.getText().toString();
 
                 // 필수 정보 입력 확인
-                if(checkIsFull(strEmail, strPwd)) {
+                if(checkIsFull(strEmail, strId, strPwd, strName, strNickname)) {
                     // 이메일 인증 확인을 위한 로그인
                     mFirebaseAuth.signInWithEmailAndPassword(strEmail, samplePass);
                     FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
@@ -98,17 +154,31 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     // 필수 정보 입력 확인
-    private boolean checkIsFull(String strEmail, String strPwd) {
+    private boolean checkIsFull(String strEmail, String strId, String strPwd, String strName, String strNickname) {
         // 이메일 미입력
         if(TextUtils.isEmpty(strEmail)) {
             Toast.makeText(RegisterActivity.this, "이메일을 입력해주세요.", Toast.LENGTH_SHORT).show();
             return false;
         }
-        //비밀번호 유효성 검사
+        // 아이디 미입력
+        if (TextUtils.isEmpty(strId)) {
+            Toast.makeText(RegisterActivity.this, "아이디를 입력해주세요.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        // 비밀번호 유효성 검사
         if(!isValidPasswd(strPwd)) {
             return false;
         }
-
+        // 이름 미입력
+        if (TextUtils.isEmpty(strName)) {
+            Toast.makeText(RegisterActivity.this, "이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        // 닉네임 미입력
+        if (TextUtils.isEmpty(strNickname)) {
+            Toast.makeText(RegisterActivity.this, "닉네임을 입력해주세요.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         return true;
     }
 
@@ -126,6 +196,7 @@ public class RegisterActivity extends AppCompatActivity {
             return true;
         }
     }
+
     // 이메일 인증 메일 전송
     private void checkEmail(String strEmail, String strPwd) {
         // 로그인
