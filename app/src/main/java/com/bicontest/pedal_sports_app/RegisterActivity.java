@@ -17,10 +17,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Iterator;
 import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -50,45 +53,54 @@ public class RegisterActivity extends AppCompatActivity {
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("Pedal");
 
         mEtEmail = findViewById(R.id.et_email);                 // 이메일 입력 필드
-        mBtnEmailCheck = findViewById(R.id.btn_emailcheck);     // 이메일 인증 버튼
         mEtId = findViewById(R.id.et_id);                       // 아이디 입력 필드
         mEtPwd = findViewById(R.id.et_pwd);                     // 비밀번호 입력 필드
         mEtPwdCheck = findViewById(R.id.et_pwdcheck);           // 비밀번호 재입력 필드
         mEtName = findViewById(R.id.et_name);                   // 이름 입력 필드
         mEtNickname = findViewById(R.id.et_nickname);           // 닉네임 입력 필드
 
+        mBtnEmailCheck = findViewById(R.id.btn_emailcheck);         // 이메일 인증 버튼
         mBtnIdCheck = findViewById(R.id.btn_idcheck);               // 아이디 중복 확인 버튼
         mBtnPwdCheck = findViewById(R.id.btn_pwdcheck);             // 비밀번호 확인 버튼
         mBtnNicknameCheck = findViewById(R.id.btn_nicknamecheck);   // 닉네임 중복 확인 버튼
         mBtnRegister = findViewById(R.id.btn_register);             // 회원가입 버튼
 
         // 아이디 중복 확인 버튼 클릭 시
-//        mBtnIdCheck.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                final String userID = mEtId.getText().toString().trim();
-//                idCheck.addListnerForSingleValueEvent(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                        for (DataSnapshot userSnapshot : snapshot.getChildren()) {
-//                            String userID2 = userSnapshot.child("userid").getValue().toString();
-//
-//                            if (userID.equals(userID2)) {
-//                                Toast.makeText(getApplicationContext(), "이미 존재하는 아이디입니다.", Toast.LENGTH_SHORT).show();
-//                            }
-//                            else {
-//                                Toast.makeText(getApplicationContext(), "사용 가능한 아이디입니다.", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    }
-//                });
-//            }
-//        });
+        mBtnIdCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mDatabaseRef.child("UserAccount").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if (snapshot.child(mEtId.getText().toString()).exists())
+                            Toast.makeText(RegisterActivity.this, "이미 존재하는 아이디입니다.", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(RegisterActivity.this, "사용 가능한 아이디입니다.", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
+            }
+        });
         // 닉네임 중복 확인 버튼 클릭 시
         mBtnNicknameCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                mDatabaseRef.child("UserAccount").addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            if (snapshot.exists())
+                                Toast.makeText(getApplicationContext(), "이미 존재하는 닉네임입니다.", Toast.LENGTH_SHORT).show();
+                            else
+                                Toast.makeText(getApplicationContext(), "사용 가능한 닉네임입니다.", Toast.LENGTH_SHORT).show();
+                    }
 
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
             }
         });
         // 비밀번호 확인 버튼 클릭 시
@@ -96,10 +108,12 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (!mEtPwd.getText().toString().equals(mEtPwdCheck.getText().toString())) {
-                    Toast.makeText(RegisterActivity.this, "비밀번호가 일치하지 않습니다!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
                     mEtPwdCheck.setText("");
                     mEtPwdCheck.requestFocus();
-                    return;
+                }
+                else {
+                    Toast.makeText(RegisterActivity.this, "비밀번호가 일치합니다.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -108,11 +122,14 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String strEmail = mEtEmail.getText().toString();
+                String strId = mEtId.getText().toString();
                 String strPwd = samplePass; // 이메일 인증용 임시 비밀번호
+                String strName = mEtName.getText().toString();
+                String strNickname = mEtNickname.getText().toString();
 
                 // 이메일 입력 확인
                 if(!TextUtils.isEmpty(strEmail)) {
-                    createUser(strEmail, strPwd);
+                    createUser(strEmail, strId, strPwd, strName, strNickname);
                 }
                 else {
                     Toast.makeText(RegisterActivity.this, "이메일을 입력해주세요.", Toast.LENGTH_SHORT).show();
@@ -143,7 +160,7 @@ public class RegisterActivity extends AppCompatActivity {
                         firebaseUser.delete();                                                        // Authentication에서 계정 정보 삭제
                         mDatabaseRef.child("UserAccount").child(firebaseUser.getUid()).removeValue(); // Realtime Datebase에서 계정 정보 삭제
 
-                        createUser(strEmail, strPwd); // 회원가입
+                        createUser(strEmail, strId, strPwd, strName, strNickname); // 회원가입
                     }
                     else {
                         Toast.makeText(RegisterActivity.this, "이메일 인증이 완료되지 않았습니다.", Toast.LENGTH_SHORT).show();
@@ -169,6 +186,10 @@ public class RegisterActivity extends AppCompatActivity {
         if(!isValidPasswd(strPwd)) {
             return false;
         }
+        // 비밀번호 미입력
+        if (TextUtils.isEmpty(strPwd)) {
+            Toast.makeText(RegisterActivity.this, "비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
+        }
         // 이름 미입력
         if (TextUtils.isEmpty(strName)) {
             Toast.makeText(RegisterActivity.this, "이름을 입력해주세요.", Toast.LENGTH_SHORT).show();
@@ -178,6 +199,7 @@ public class RegisterActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(strNickname)) {
             Toast.makeText(RegisterActivity.this, "닉네임을 입력해주세요.", Toast.LENGTH_SHORT).show();
             return false;
+
         }
         return true;
     }
@@ -218,7 +240,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     // 회원가입 진행
-    private void createUser(String strEmail, String strPwd) {
+    private void createUser(String strEmail, String strId, String strPwd, String strName, String strNickname) {
         // Firebase Auth 진행
         mFirebaseAuth.createUserWithEmailAndPassword(strEmail, strPwd).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
             @Override
@@ -228,7 +250,10 @@ public class RegisterActivity extends AppCompatActivity {
                     UserAccount account = new UserAccount();
                     account.setIdToken(firebaseUser.getUid());
                     account.setEmailId(firebaseUser.getEmail());
+                    account.setUserId(strId);
                     account.setPassword(strPwd);
+                    account.setName(strName);
+                    account.setNickname(strNickname);
 
                     // setValue: database에 insert (삽입) 행위
                     mDatabaseRef.child("UserAccount").child(firebaseUser.getUid()).setValue(account);
