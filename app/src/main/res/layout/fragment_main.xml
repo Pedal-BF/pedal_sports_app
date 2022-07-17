@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff"
-    tools:context=".MainFragment">
+    tools:context=".main_pages.MainFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -38,14 +38,22 @@
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
-                <ImageView
+                <!--<ImageView
                     android:id="@+id/recommed_image"
                     android:layout_width="200dp"
                     android:layout_height="110dp"
                     android:layout_below="@+id/recommed_title"
                     android:layout_marginTop="10dp"
                     android:layout_marginStart="20dp"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="centerCrop" />-->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/thumbnail_listview"
+                    android:layout_width="match_parent"
+                    android:layout_height="110dp"
+                    android:layout_below="@+id/recommed_title"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="20dp"
+                    android:scrollbars="horizontal" />
 
             </RelativeLayout>
 
