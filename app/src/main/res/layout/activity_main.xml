@@ -32,6 +32,7 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#ffffff"
         android:layout_below="@id/header">
 
     </FrameLayout>
@@ -51,8 +52,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="#ffffff"
-        app:itemIconTint="@color/black"
         app:itemIconSize="33dp"
+        app:itemIconTint="@color/black"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_menu" />
