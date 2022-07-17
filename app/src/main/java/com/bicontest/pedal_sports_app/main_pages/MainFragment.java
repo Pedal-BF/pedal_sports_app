@@ -1,4 +1,4 @@
-package com.bicontest.pedal_sports_app;
+package com.bicontest.pedal_sports_app.main_pages;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -6,10 +6,15 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import com.bicontest.pedal_sports_app.MainActivity;
+import com.bicontest.pedal_sports_app.R;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,13 +30,18 @@ public class MainFragment extends Fragment {
 
     private ImageView recommedImage; // 추천 영상 이미지
 
-    private String[] imagesUrl = new String[] {
-            "https://img.youtube.com/vi/MfZf-hV9mPw/sddefault.jpg",
-            "https://img.youtube.com/vi/auU6iQ5v_bU/sddefault.jpg",
-            "https://img.youtube.com/vi/rsaERcPAKWQ/sddefault.jpg",
-            "https://img.youtube.com/vi/XnXaUt2TvPo/sddefault.jpg",
-            "https://img.youtube.com/vi/_ka09IuBOf4/sddefault.jpg"
+    private String[] youtubeUrls = {
+            "https://youtu.be/6AiSi3E3ifs",
+            "https://youtu.be/2gHcoelhHw0",
+            "https://youtu.be/CRMpWponGIc",
+            "https://youtu.be/6ulvd_mw_uo",
+            "https://youtu.be/6ies7bJfYRs"
     };
+
+    // 각각의 Fragment마다 Instance를 반환해 줄 메소드를 생성
+    public static MainFragment newInstance() {
+        return new MainFragment();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,15 +50,34 @@ public class MainFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_main, container, false);
 
         adSlideImage = v.findViewById(R.id.ad_slide);
-        recommedImage = v.findViewById(R.id.recommed_image);
+        //recommedImage = v.findViewById(R.id.recommed_image);
 
-        //https://youtu.be/MfZf-hV9mPw
-        //String youtubeThumbnail= "https://img.youtube.com/vi/MfZf-hV9mPw/default.jpg";
+        advertiseImageSet();
+        //recommendImageSet();
+
+        // 이미지 클릭 시 상세 영상 페이지로 이동
+        adSlideImage.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // getActivity()로 MainActivity의 replaceFragment를 불러옴
+                // 새로 불러올 Fragment의 Instance를 Main으로 전달
+                ((MainActivity)getActivity()).replaceFragment(VideoViewFragment.newInstance());
+                return true;
+            }
+        });
+
+        return v;
+    }
+    // 광고 리스트
+    public void advertiseImageSet() {
         Thread mTread = new Thread() {
             @Override
             public void run() {
                 try {
-                    URL url = new URL("https://img.youtube.com/vi/MfZf-hV9mPw/sddefault.jpg");
+                    //Log.println(Log.DEBUG,"debug", "----------------------------------------------------------------");
+                    String[] splited = youtubeUrls[0].split("/"); // splited[3]에 youtube key? 들어있음
+                    String youtubeThumbnail = "https://img.youtube.com/vi/" + splited[3] + "/sddefault.jpg";  // 유튜브 영상 url을 썸네일 url로 변환
+                    URL url = new URL(youtubeThumbnail);
 
                     // Youtube에서 이미지를 가져오고 ImageView에 저장할 Bitmap 생성
                     HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
@@ -76,17 +105,17 @@ public class MainFragment extends Fragment {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        recommendImageSet();
-
-        return v;
     }
+
+    // 추천 영상 리스트
     public void recommendImageSet() {
         Thread mTread = new Thread() {
             @Override
             public void run() {
                 try {
-                    URL url = new URL(imagesUrl[1]);
+                    String[] splited = youtubeUrls[0].split("/"); // splited[3]에 youtube key? 들어있음
+                    String youtubeThumbnail = "https://img.youtube.com/vi/" + splited[3] + "/sddefault.jpg";
+                    URL url = new URL(youtubeThumbnail);
 
                     // Youtube에서 이미지를 가져오고 ImageView에 저장할 Bitmap 생성
                     HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
