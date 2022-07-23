@@ -1,16 +1,16 @@
 package com.bicontest.pedal_sports_app.main_pages;
 
 public class RecyclerViewItem {
-    private String mImgName;
+    private String mImgURL;
     private String mMainText;
-    private String mSubText;
+    //private String mSubText;
 
-    public String getImgName() {
-        return mImgName;
+    public String getImgURL() {
+        return mImgURL;
     }
 
-    public void setImgName(String imgName) {
-        this.mImgName = imgName;
+    public void setImgURL(String imgURL) {
+        this.mImgURL = imgURL;
     }
 
     public String getMainText() {
