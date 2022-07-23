@@ -23,8 +23,13 @@ import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import java.util.ArrayList;
+
 public class MainFragment extends Fragment {
 
+    View v;
     private ImageView adSlideImage;  // 슬라이드 광고 부분 이미지
     Bitmap bitmap, bitmap2;
 
@@ -38,6 +43,10 @@ public class MainFragment extends Fragment {
             "https://youtu.be/6ies7bJfYRs"
     };
 
+    private RecyclerView mRecyclerView;
+    private ArrayList<RecyclerViewItem> mList;
+    private RecyclerViewAdapter mRecyclerViewAdapter;
+
     // 각각의 Fragment마다 Instance를 반환해 줄 메소드를 생성
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -47,7 +56,7 @@ public class MainFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // fragment에서 findViewById를 하기 위한 세팅
-        View v = inflater.inflate(R.layout.fragment_main, container, false);
+        v = inflater.inflate(R.layout.fragment_main, container, false);
 
         adSlideImage = v.findViewById(R.id.ad_slide);
         //recommedImage = v.findViewById(R.id.recommed_image);
@@ -66,7 +75,32 @@ public class MainFragment extends Fragment {
             }
         });
 
+        firstInit();
+
+        for(int i=0;i<5;i++){
+            addItem("iconName", "Test");
+        }
+
+        mRecyclerViewAdapter = new RecyclerViewAdapter(mList);
+        mRecyclerView.setAdapter(mRecyclerViewAdapter);
+        //mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity())); // 수직 리스트
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false)); // 수평 리스트
+
         return v;
+    }
+    public void firstInit(){
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.thumbnail_recyclerview);
+        mList = new ArrayList<>();
+    }
+
+    public void addItem(String imgName, String mainText){
+        RecyclerViewItem item = new RecyclerViewItem();
+
+        item.setImgName(imgName);
+        item.setMainText(mainText);
+        //item.setSubText(subText);
+
+        mList.add(item);
     }
     // 광고 리스트
     public void advertiseImageSet() {
