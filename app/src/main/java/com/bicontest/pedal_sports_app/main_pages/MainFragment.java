@@ -104,6 +104,13 @@ public class MainFragment extends Fragment {
 
         mList.add(item);
     }
+    
+    // 유튜브 링크에서 key 값 추출
+    public String youtubeKeyParse(String youtubeUrl) {
+        String[] splited = youtubeUrl.split("/"); // splited[3]에 youtube key? 들어있음
+
+        return splited[3];
+    }
 
     // 광고 리스트
     public void advertiseImageSet() {
@@ -112,8 +119,8 @@ public class MainFragment extends Fragment {
             public void run() {
                 try {
                     //Log.println(Log.DEBUG,"debug", "----------------------------------------------------------------");
-                    String[] splited = youtubeUrls[0].split("/"); // splited[3]에 youtube key? 들어있음
-                    String youtubeThumbnail = "https://img.youtube.com/vi/" + splited[3] + "/sddefault.jpg";  // 유튜브 영상 url을 썸네일 url로 변환
+                    // 유튜브 영상 url을 썸네일 url로 변환
+                    String youtubeThumbnail = "https://img.youtube.com/vi/" + youtubeKeyParse(youtubeUrls[0]) + "/sddefault.jpg";
                     URL url = new URL(youtubeThumbnail);
 
                     // Youtube에서 이미지를 가져오고 ImageView에 저장할 Bitmap 생성

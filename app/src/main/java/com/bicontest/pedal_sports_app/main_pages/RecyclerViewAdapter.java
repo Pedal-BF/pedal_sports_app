@@ -58,6 +58,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return vh;
     }
 
+    // 유튜브 링크에서 key 값 추출
+    public String youtubeKeyParse(String youtubeUrl) {
+        String[] splited = youtubeUrl.split("/"); // splited[3]에 youtube key? 들어있음
+
+        return splited[3];
+    }
+
     // position에 해당하는 데이터를 뷰홀더의 아이템뷰에 표시
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewAdapter.ViewHolder holder, int position) {
@@ -72,8 +79,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             public void run() {
                 try {
                     //Log.println(Log.DEBUG,"debug", "----------------------------------------------------------------");
-                    String[] splited = item.getImgURL().split("/"); // splited[3]에 youtube key? 들어있음
-                    String youtubeThumbnail = "https://img.youtube.com/vi/" + splited[3] + "/sddefault.jpg";  // 유튜브 영상 url을 썸네일 url로 변환
+                    String youtubeThumbnail = "https://img.youtube.com/vi/" + youtubeKeyParse(item.getImgURL()) + "/sddefault.jpg";  // 유튜브 영상 url을 썸네일 url로 변환
                     URL url = new URL(youtubeThumbnail);
 
                     // Youtube에서 이미지를 가져오고 ImageView에 저장할 Bitmap 생성
