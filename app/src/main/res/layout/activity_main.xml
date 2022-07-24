@@ -32,10 +32,8 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ffffff"
-        android:layout_below="@id/header">
-
-    </FrameLayout>
+        android:layout_below="@id/header"
+        android:background="#ffffff"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
