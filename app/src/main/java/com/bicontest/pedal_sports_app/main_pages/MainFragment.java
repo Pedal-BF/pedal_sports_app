@@ -18,6 +18,7 @@ import com.bicontest.pedal_sports_app.R;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -25,6 +26,10 @@ import javax.net.ssl.HttpsURLConnection;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserFactory;
+
 import java.util.ArrayList;
 
 public class MainFragment extends Fragment {
@@ -42,6 +47,7 @@ public class MainFragment extends Fragment {
             "https://youtu.be/6ulvd_mw_uo",
             "https://youtu.be/6ies7bJfYRs"
     };
+    private String excerciseData;
 
     private RecyclerView mRecyclerView;
     private ArrayList<RecyclerViewItem> mList;
@@ -59,6 +65,15 @@ public class MainFragment extends Fragment {
         v = inflater.inflate(R.layout.fragment_main, container, false);
 
         adSlideImage = v.findViewById(R.id.ad_slide);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                excerciseData = getExcerciseInfo();
+                Log.println(Log.DEBUG,"Test", "----------------------------------------------------------------");
+                Log.println(Log.DEBUG,"Data", excerciseData);
+            }
+        }).start();
 
         advertiseImageSet();
 
@@ -89,12 +104,52 @@ public class MainFragment extends Fragment {
         return v;
     }
 
+    // 운동 API에서 데이터 가져오기 = Parsing
+    public String getExcerciseInfo() {
+        StringBuffer buffer = new StringBuffer();
+
+        String serviceKey = "7VgAbrUNHG0BQOPUubAEEkOT45PoaRK6TR92eLuGBsfqyhspb%2BY1oOyrwqIeWXYGrSVw9vMreaGpnekwpR8pGw%3D%3D";
+        String limitPage = "10"; // 최대 248
+
+        String queryUrl = "https://api.odcloud.kr/api/15084814/v1/uddi:3f8d6b98-0082-4792-92a8-90d40ecc4bce"
+                + "?page=1&perPage=" + limitPage + "&serviceKey=" + serviceKey;
+
+        try {
+            URL url = new URL(queryUrl);        // 문자열로 된 url을 URL 객체로 생성
+            InputStream is = url.openStream();  // url 위치로 입력 스트림 연결
+
+            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+            XmlPullParser xpp = factory.newPullParser();
+            xpp.setInput(new InputStreamReader(is, "UTF-8"));  // inputstream으로부터 xml 입력 받기
+
+            String tag = xpp.getName();
+            /*while(!tag.equals("data")) {
+                xpp.next();
+                tag = xpp.getName();
+            }*/
+
+            //xpp.next();
+            buffer.append(tag);
+            Log.println(Log.DEBUG,"Test", "----------------------------------------------------------------");
+            Log.println(Log.DEBUG,"Tag", "test");
+
+       } catch (Exception e) {
+            // TODO Auto-generated catch block e.printStackTrace();
+            e.printStackTrace();
+            Log.println(Log.DEBUG,"Test", "----------------------------------------------------------------");
+            Log.println(Log.DEBUG,"Error", "API ERROR");
+        }
+
+        return buffer.toString();  // StringBuffer 문자열 객체 반환
+    }
+
     // 영상 수평 리스트에 필요한 부분
     public void firstInit(){
         mRecyclerView = (RecyclerView) v.findViewById(R.id.thumbnail_recyclerview);
         mList = new ArrayList<>();
     }
 
+    // 수평 리스트에 유튜브 썸네일, 제목 추가
     public void addItem(String imgURL, String mainText){
         RecyclerViewItem item = new RecyclerViewItem();
 
