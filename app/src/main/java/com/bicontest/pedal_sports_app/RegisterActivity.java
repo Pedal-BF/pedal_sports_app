@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,8 +31,8 @@ import java.util.regex.Pattern;
 public class RegisterActivity extends AppCompatActivity {
 
     private FirebaseAuth mFirebaseAuth;                                          // 파이어베이스 인증
-
     private DatabaseReference mDatabaseRef;                                      // 실시간 데이터베이스
+
     private EditText mEtEmail, mEtPwd, mEtPwdCheck, mEtNickname, mEtId, mEtName; // 회원가입 입력필드
     private Button mBtnEmailCheck;                                               // 이메일 인증 버튼
     private Button mBtnIdCheck;                                                  // 아이디 중복 확인 버튼
@@ -69,13 +71,18 @@ public class RegisterActivity extends AppCompatActivity {
         mBtnIdCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDatabaseRef.child("UserAccount").addValueEventListener(new ValueEventListener() {
+                mDatabaseRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if (snapshot.child(mEtId.getText().toString()).exists())
+                        if (mEtId.length() == 0) {
+                            Toast.makeText(RegisterActivity.this, "아이디를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                        }
+                        else if (!snapshot.exists()) {
                             Toast.makeText(RegisterActivity.this, "이미 존재하는 아이디입니다.", Toast.LENGTH_SHORT).show();
-                        else
+                        }
+                        else {
                             Toast.makeText(RegisterActivity.this, "사용 가능한 아이디입니다.", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
@@ -88,15 +95,19 @@ public class RegisterActivity extends AppCompatActivity {
         mBtnNicknameCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mDatabaseRef.child("UserAccount").addValueEventListener(new ValueEventListener() {
+                mDatabaseRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.exists())
-                                Toast.makeText(getApplicationContext(), "이미 존재하는 닉네임입니다.", Toast.LENGTH_SHORT).show();
-                            else
-                                Toast.makeText(getApplicationContext(), "사용 가능한 닉네임입니다.", Toast.LENGTH_SHORT).show();
+                        if (mEtNickname.length() == 0) {
+                            Toast.makeText(RegisterActivity.this, "닉네임을 입력해주세요.", Toast.LENGTH_SHORT).show();
+                        }
+                        else if (snapshot.child(mEtNickname.getText().toString()).exists()) {
+                            Toast.makeText(RegisterActivity.this, "이미 존재하는 닉네임입니다.", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(RegisterActivity.this, "사용 가능한 닉네임입니다.", Toast.LENGTH_SHORT).show();
+                        }
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                     }
@@ -107,7 +118,10 @@ public class RegisterActivity extends AppCompatActivity {
         mBtnPwdCheck.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (!mEtPwd.getText().toString().equals(mEtPwdCheck.getText().toString())) {
+                if (mEtPwd.length() == 0 || mEtPwdCheck.length() == 0) {
+                    Toast.makeText(RegisterActivity.this, "비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                }
+                else if (!mEtPwd.getText().toString().equals(mEtPwdCheck.getText().toString())) {
                     Toast.makeText(RegisterActivity.this, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
                     mEtPwdCheck.setText("");
                     mEtPwdCheck.requestFocus();

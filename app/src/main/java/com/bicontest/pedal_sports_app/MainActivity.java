@@ -1,7 +1,11 @@
 package com.bicontest.pedal_sports_app;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.Manifest;
+import android.app.Activity;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
