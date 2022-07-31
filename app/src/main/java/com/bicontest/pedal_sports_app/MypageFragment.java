@@ -20,9 +20,9 @@ public class MypageFragment extends Fragment {
     private FirebaseAuth mFirebaseAuth;     // 파이어베이스 인증
     private DatabaseReference mDatabaseRef; // 실시간 데이터베이스
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    // 각각의 Fragment마다 Instance를 반환해 줄 메소드를 생성
+    public static MypageFragment newInstance() {
+        return new MypageFragment();
     }
 
     @Override
@@ -33,6 +33,19 @@ public class MypageFragment extends Fragment {
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("Pedal");
+
+        // 회원 정보 수정
+        Button btn_userinfo = v.findViewById(R.id.btn_userinfoupdate);
+        btn_userinfo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // getActivity()로 MainActivity의 replaceFragment를 불러옴
+                //새로 불러온 Fragment의 Instance를 Main으로 전달
+                Intent intent = new Intent(getActivity(), UserInfoUpdataActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivity(intent);
+            }
+        });
 
         // 로그아웃
         Button btn_logout = v.findViewById(R.id.btn_logout);

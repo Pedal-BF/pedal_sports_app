@@ -48,4 +48,17 @@
         android:backgroundTint="#4C25DB"
         android:text="탈퇴하기" />
 
+    <Button
+        android:id="@+id/btn_userinfoupdate"
+        android:layout_width="149dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="131dp"
+        android:layout_marginEnd="131dp"
+        android:layout_marginBottom="147dp"
+        android:backgroundTint="#4C25DB"
+        android:text="회원 정보 수정" />
+
 </RelativeLayout>
