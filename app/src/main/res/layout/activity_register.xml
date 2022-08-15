@@ -67,7 +67,7 @@
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/et_pwdcheck"
-        app:layout_constraintTop_toBottomOf="@+id/btn_idcheck" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_idChange" />
 
     <EditText
         android:id="@+id/et_name"
@@ -159,7 +159,7 @@
         app:layout_constraintTop_toBottomOf="@+id/et_pwd" />
 
     <Button
-        android:id="@+id/btn_idcheck"
+        android:id="@+id/btn_idChange"
         android:layout_width="100dp"
         android:layout_height="50dp"
         android:layout_marginStart="9dp"

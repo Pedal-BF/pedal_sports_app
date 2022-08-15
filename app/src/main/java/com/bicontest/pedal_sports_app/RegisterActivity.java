@@ -5,9 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,8 +22,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Iterator;
 import java.util.regex.Pattern;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -62,7 +58,7 @@ public class RegisterActivity extends AppCompatActivity {
         mEtNickname = findViewById(R.id.et_nickname);           // 닉네임 입력 필드
 
         mBtnEmailCheck = findViewById(R.id.btn_emailcheck);         // 이메일 인증 버튼
-        mBtnIdCheck = findViewById(R.id.btn_idcheck);               // 아이디 중복 확인 버튼
+        mBtnIdCheck = findViewById(R.id.btn_idChange);               // 아이디 중복 확인 버튼
         mBtnPwdCheck = findViewById(R.id.btn_pwdcheck);             // 비밀번호 확인 버튼
         mBtnNicknameCheck = findViewById(R.id.btn_nicknamecheck);   // 닉네임 중복 확인 버튼
         mBtnRegister = findViewById(R.id.btn_register);             // 회원가입 버튼
