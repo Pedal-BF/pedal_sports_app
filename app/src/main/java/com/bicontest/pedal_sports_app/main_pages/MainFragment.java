@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import com.bicontest.pedal_sports_app.MainActivity;
 import com.bicontest.pedal_sports_app.R;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -27,8 +28,9 @@ import javax.net.ssl.HttpsURLConnection;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -66,15 +68,6 @@ public class MainFragment extends Fragment {
 
         adSlideImage = v.findViewById(R.id.ad_slide);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                excerciseData = getExcerciseInfo();
-                Log.println(Log.DEBUG,"Test", "----------------------------------------------------------------");
-                Log.println(Log.DEBUG,"Data", excerciseData);
-            }
-        }).start();
-
         advertiseImageSet();
 
         // 이미지 클릭 시 상세 영상 페이지로 이동
@@ -91,10 +84,12 @@ public class MainFragment extends Fragment {
         // 수평 리스트
         firstInit();
 
+        getExcerciseInfo(); // API에서 운동 데이터 받아오기
+
         // 리스트에 youtube Url, 제목 정보 전달
-        for(int i = 0; i < 5; i++){
+        /*for(int i = 0; i < 5; i++){
             addItem(youtubeUrls[i], "Test");
-        }
+        }*/
 
         mRecyclerViewAdapter = new RecyclerViewAdapter(mList);
         mRecyclerView.setAdapter(mRecyclerViewAdapter);
@@ -105,42 +100,75 @@ public class MainFragment extends Fragment {
     }
 
     // 운동 API에서 데이터 가져오기 = Parsing
-    public String getExcerciseInfo() {
-        StringBuffer buffer = new StringBuffer();
+    public void getExcerciseInfo() {
+        Thread apiThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String serviceKey = "7VgAbrUNHG0BQOPUubAEEkOT45PoaRK6TR92eLuGBsfqyhspb%2BY1oOyrwqIeWXYGrSVw9vMreaGpnekwpR8pGw%3D%3D";
+                String limitPage = "10"; // 최대 248
 
-        String serviceKey = "7VgAbrUNHG0BQOPUubAEEkOT45PoaRK6TR92eLuGBsfqyhspb%2BY1oOyrwqIeWXYGrSVw9vMreaGpnekwpR8pGw%3D%3D";
-        String limitPage = "10"; // 최대 248
+                String urlAddress = "https://api.odcloud.kr/api/15084814/v1/uddi:3f8d6b98-0082-4792-92a8-90d40ecc4bce"
+                        + "?page=1&perPage=" + limitPage + "&serviceKey=" + serviceKey;
 
-        String queryUrl = "https://api.odcloud.kr/api/15084814/v1/uddi:3f8d6b98-0082-4792-92a8-90d40ecc4bce"
-                + "?page=1&perPage=" + limitPage + "&serviceKey=" + serviceKey;
+                try {
+                    URL url = new URL(urlAddress);
 
+                    InputStream is = url.openStream();
+                    InputStreamReader isr = new InputStreamReader(is);
+                    BufferedReader reader = new BufferedReader(isr);
+
+                    StringBuffer buffer = new StringBuffer();
+                    String line = reader.readLine();
+                    while(line != null) {
+                        buffer.append(line + "\n");
+                        line = reader.readLine();
+                    }
+
+                    String jsonData = buffer.toString();
+
+                    // jsonDate를 JSONObject의 형태로 변환
+                    JSONObject jsonObj = new JSONObject(jsonData);
+
+                    // JSONObject에서 "data"의 JSONArray 추출
+                    JSONArray content = (JSONArray)jsonObj.get("data");
+
+                    // 리스트에 youtube Url, 제목 정보 전달
+                    for(int i = 0; i < content.length(); i++) {
+                        // i번째 정보 가져오기
+                        JSONObject contentCut = content.getJSONObject(i);
+
+                        // URL, 제목 정보 추출
+                        String mYoutubeURL = contentCut.getString("동영상주소");
+                        String mYoutubeTitle = contentCut.getString("제목");
+
+                        // 제목을 앞 16글자까지만 보이도록 수정
+                        String mShortTitle = mYoutubeTitle.substring(0, 16) + "...";
+
+                        Log.println(Log.DEBUG,"Data", mYoutubeURL + " " + mYoutubeTitle);
+                        // 리스트에 Url, 제목 정보 추가
+                        addItem(mYoutubeURL, mShortTitle);
+                    }
+
+                    //Log.println(Log.DEBUG,"Test", "----------------------------------------------------------------");
+                    //Log.println(Log.DEBUG,"Data", content.toString());
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        apiThread.start();
+
+        // 데이터 가져오는 동안 로딩화면 뜨도록 -> 안 해주면 빈 화면이 될 수도
         try {
-            URL url = new URL(queryUrl);        // 문자열로 된 url을 URL 객체로 생성
-            InputStream is = url.openStream();  // url 위치로 입력 스트림 연결
-
-            XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-            XmlPullParser xpp = factory.newPullParser();
-            xpp.setInput(new InputStreamReader(is, "UTF-8"));  // inputstream으로부터 xml 입력 받기
-
-            String tag = xpp.getName();
-            /*while(!tag.equals("data")) {
-                xpp.next();
-                tag = xpp.getName();
-            }*/
-
-            //xpp.next();
-            buffer.append(tag);
-            Log.println(Log.DEBUG,"Test", "----------------------------------------------------------------");
-            Log.println(Log.DEBUG,"Tag", "test");
-
-       } catch (Exception e) {
-            // TODO Auto-generated catch block e.printStackTrace();
+            apiThread.join();
+        } catch (InterruptedException e) {
             e.printStackTrace();
-            Log.println(Log.DEBUG,"Test", "----------------------------------------------------------------");
-            Log.println(Log.DEBUG,"Error", "API ERROR");
         }
-
-        return buffer.toString();  // StringBuffer 문자열 객체 반환
     }
 
     // 영상 수평 리스트에 필요한 부분

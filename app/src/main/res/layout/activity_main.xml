@@ -51,7 +51,7 @@
         android:layout_alignParentBottom="true"
         android:background="#ffffff"
         app:itemIconSize="33dp"
-        app:itemIconTint="@color/black"
+        app:itemIconTint="@drawable/menu_select_color"
         app:labelVisibilityMode="unlabeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:menu="@menu/bottom_menu" />
