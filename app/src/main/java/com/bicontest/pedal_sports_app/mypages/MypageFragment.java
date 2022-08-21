@@ -1,10 +1,8 @@
-package com.bicontest.pedal_sports_app;
+package com.bicontest.pedal_sports_app.mypages;
 
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +11,8 @@ import android.widget.Button;
 import android.content.Intent;
 import android.widget.Toast;
 
+import com.bicontest.pedal_sports_app.R;
+import com.bicontest.pedal_sports_app.users_sign.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;

@@ -1,11 +1,7 @@
 package com.bicontest.pedal_sports_app;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.Manifest;
-import android.app.Activity;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -16,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 import android.view.MenuItem;
 
 import com.bicontest.pedal_sports_app.main_pages.MainFragment;
+import com.bicontest.pedal_sports_app.mypages.MypageFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {

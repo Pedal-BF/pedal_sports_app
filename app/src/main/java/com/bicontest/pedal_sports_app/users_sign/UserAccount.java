@@ -1,4 +1,4 @@
-package com.bicontest.pedal_sports_app;
+package com.bicontest.pedal_sports_app.users_sign;
 
 /*
    사용자 계정 정보 모델 클래스
