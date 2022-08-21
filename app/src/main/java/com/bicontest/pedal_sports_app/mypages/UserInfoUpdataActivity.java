@@ -36,7 +36,7 @@ import java.util.Map;
 public class UserInfoUpdataActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
     private DatabaseReference mDatabaseRef;
-    private FirebaseStorage mFirebaseStorage;
+    private FirebaseStorage mFirebaseStorage; // storage 사용시 gradle에서 뭔갈 해야 함
 
     private ImageView mIvProfile;                                                                         // 프로필 사진 필드
     private EditText mEtName, mEtIdChange, mEtNicknameChange, mEtPwdChange, mEtPwdCheckChange, mEtEmail;  // 회원정보 수정 입력 필드
