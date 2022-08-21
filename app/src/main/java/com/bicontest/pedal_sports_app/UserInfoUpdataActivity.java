@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.content.res.ObbInfo;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -56,7 +56,7 @@ public class UserInfoUpdataActivity extends AppCompatActivity {
 
         mFirebaseAuth = FirebaseAuth.getInstance();
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("Pedal");
-        mFirebaseStorage = FirebaseStorage.getInstance();
+        mFirebaseStorage = FirebaseStorage.getInstance("gs://pedal-sports-app.appspot.com");
 
         mIvProfile = findViewById(R.id.iv_profile);                                // 프로필 사진
 
@@ -75,17 +75,16 @@ public class UserInfoUpdataActivity extends AppCompatActivity {
         mBtnCancel = findViewById(R.id.btn_cancel);                                // 변경 취소 버튼
 
         // 프로필 사진 필드
-//        mDatabaseRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                getIntent().putExtra("Image", )
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
+        StorageReference storageRef = mFirebaseStorage.getReference();
+        String filename = "profile" + mFirebaseAuth.getUid() + ".jpg";
+        storageRef.child("profile_img/" + filename).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                Glide.with((getApplicationContext()))
+                        .load(uri)
+                        .into(mIvProfile);
+            }
+        });
 
         // 이름 입력 필드
         mEtName.setFocusable(false);    // 입력창 수정 불가
@@ -107,7 +106,7 @@ public class UserInfoUpdataActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String ID = snapshot.child("UserAccount").child(mFirebaseAuth.getUid()).child("userId").getValue(String.class);
-                mEtEmail.setText(ID);    // 데이터를 입력창에 출력
+                mEtIdChange.setText(ID);    // 데이터를 입력창에 출력
             }
 
             @Override
@@ -120,7 +119,7 @@ public class UserInfoUpdataActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String PW = snapshot.child("UserAccount").child(mFirebaseAuth.getUid()).child("password").getValue(String.class);
-                mEtEmail.setText(PW);    // 데이터를 입력창에 출력
+                mEtPwdChange.setText(PW);    // 데이터를 입력창에 출력
             }
 
             @Override
@@ -133,7 +132,7 @@ public class UserInfoUpdataActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String Nick = snapshot.child("UserAccount").child(mFirebaseAuth.getUid()).child("nickname").getValue(String.class);
-                mEtEmail.setText(Nick);    // 데이터를 입력창에 출력
+                mEtNicknameChange.setText(Nick);    // 데이터를 입력창에 출력
             }
 
             @Override
@@ -190,8 +189,13 @@ public class UserInfoUpdataActivity extends AppCompatActivity {
 
                             Toast.makeText(UserInfoUpdataActivity.this, "비밀번호를 입력해주세요.", Toast.LENGTH_SHORT).show();
                         }
-                        else if (!mEtPwdChange.getText().toString().equals(mEtPwdCheckChange.getText().toString())) {
+                        else if (!changePw.equals(mEtPwdCheckChange.getText().toString())) {
                             Toast.makeText(UserInfoUpdataActivity.this, "비밀번호가 일치하지 않습니다.", Toast.LENGTH_SHORT).show();
+                            mEtPwdCheckChange.setText("");
+                            mEtPwdCheckChange.requestFocus();
+                        }
+                        else if (changePw.equals(getData(snapshot))) {
+                            Toast.makeText(UserInfoUpdataActivity.this, "이미 존재하는 비밀번호입니다.", Toast.LENGTH_SHORT).show();
                             mEtPwdCheckChange.setText("");
                             mEtPwdCheckChange.requestFocus();
                         }
@@ -249,6 +253,7 @@ public class UserInfoUpdataActivity extends AppCompatActivity {
         mBtnUserInfoUpdataok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(UserInfoUpdataActivity.this, "회원 정보가 수정되었습니다.", Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
@@ -284,10 +289,25 @@ public class UserInfoUpdataActivity extends AppCompatActivity {
     // 파이어베이스 이미지 업로드
     private void uploadToFirebase(Uri uri) {
         StorageReference storageRef = mFirebaseStorage.getReference();
-        StorageReference mountainsRef = storageRef.child("profile.jpg");
-        StorageReference mountainImagesRef = storageRef.child("image/mountains.jpg");
-
-        mountainsRef.getName().equals(mountainImagesRef.getName());     // true
-        mountainsRef.getPath().equals(mountainImagesRef.getPath());     // false
+        String filename = "profile" + mFirebaseAuth.getUid() + ".jpg";
+        Uri file = uri;
+        StorageReference riverRef = storageRef.child("profile_img/" + filename);
+        UploadTask uploadTask = riverRef.putFile(file);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(UserInfoUpdataActivity.this, "프로필 이미지가 변경되었습니다.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private Object getData(DataSnapshot snapshot) {
+        for (DataSnapshot snap : snapshot.getChildren()) {
+            String PW = snap.child("password").getValue(String.class);
+        }
+        return null;
     }
 }
