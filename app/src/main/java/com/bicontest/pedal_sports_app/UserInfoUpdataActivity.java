@@ -18,9 +18,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,7 +26,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -38,7 +34,7 @@ import java.util.Map;
 public class UserInfoUpdataActivity extends AppCompatActivity {
     private FirebaseAuth mFirebaseAuth;
     private DatabaseReference mDatabaseRef;
-    private FirebaseStorage mFirebaseStorage;
+    private FirebaseStorage mFirebaseStorage; // storage 사용시 gradle에서 뭔갈 해야 함
 
     private ImageView mIvProfile;                                                                         // 프로필 사진 필드
     private EditText mEtName, mEtIdChange, mEtNicknameChange, mEtPwdChange, mEtPwdCheckChange, mEtEmail;  // 회원정보 수정 입력 필드
