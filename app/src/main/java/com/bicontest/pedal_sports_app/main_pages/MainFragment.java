@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -15,6 +17,12 @@ import android.widget.ImageView;
 
 import com.bicontest.pedal_sports_app.MainActivity;
 import com.bicontest.pedal_sports_app.R;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,11 +44,17 @@ import java.util.ArrayList;
 
 public class MainFragment extends Fragment {
 
-    View v;
-    private ImageView adSlideImage;  // 슬라이드 광고 부분 이미지
-    Bitmap bitmap, bitmap2;
+    // 상수 선언
+    private final int advertiseNum = 5; // 광고 영상 갯수
+    private final int recommendNum = 7; // 추천 영상 갯수
 
-    private ImageView recommedImage; // 추천 영상 이미지
+    private View v;
+
+    // 슬라이드 광고 부분 이미지
+    private ImageView adSlideImage;
+    private Bitmap bitmap;
+
+    // private ImageView recommedImage; // 추천 영상 이미지
 
     private String[] youtubeUrls = {
             "https://youtu.be/6AiSi3E3ifs",
@@ -49,8 +63,12 @@ public class MainFragment extends Fragment {
             "https://youtu.be/6ulvd_mw_uo",
             "https://youtu.be/6ies7bJfYRs"
     };
-    private String excerciseData;
 
+    // 파이어베이스 DB 접근
+    private DatabaseReference myRef;
+    private FirebaseDatabase database;
+    
+    // 영상 목록 수평 리스트
     private RecyclerView mRecyclerView;
     private ArrayList<RecyclerViewItem> mList;
     private RecyclerViewAdapter mRecyclerViewAdapter;
@@ -65,6 +83,9 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         // fragment에서 findViewById를 하기 위한 세팅
         v = inflater.inflate(R.layout.fragment_main, container, false);
+
+        //setExerciseData(); // API에서 운동 데이터 받아서 파이어베이스에 저장 - 저장해둠
+        //setAdvertiseVideo(); // 광고로 보여줄 영상 index 저장
 
         adSlideImage = v.findViewById(R.id.ad_slide);
 
@@ -84,7 +105,7 @@ public class MainFragment extends Fragment {
         // 수평 리스트
         firstInit();
 
-        getExcerciseInfo(); // API에서 운동 데이터 받아오기
+        getExerciseInfo(); // 파이어베이스에서 운동 데이터 받아오기
 
         // 리스트에 youtube Url, 제목 정보 전달
         /*for(int i = 0; i < 5; i++){
@@ -99,85 +120,83 @@ public class MainFragment extends Fragment {
         return v;
     }
 
-    // 운동 API에서 데이터 가져오기 = Parsing
-    public void getExcerciseInfo() {
-        Thread apiThread = new Thread(new Runnable() {
+    // 파이어베이스에서 데이터 가져와서 메인페이지에 보여주기
+    public void getExerciseInfo() {
+        Thread getExerciseThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                String serviceKey = "7VgAbrUNHG0BQOPUubAEEkOT45PoaRK6TR92eLuGBsfqyhspb%2BY1oOyrwqIeWXYGrSVw9vMreaGpnekwpR8pGw%3D%3D";
-                String limitPage = "10"; // 최대 248
+                database = FirebaseDatabase.getInstance();         // 데이터베이스 선언, 할당
+                myRef = database.getReference("Pedal");
 
-                String urlAddress = "https://api.odcloud.kr/api/15084814/v1/uddi:3f8d6b98-0082-4792-92a8-90d40ecc4bce"
-                        + "?page=1&perPage=" + limitPage + "&serviceKey=" + serviceKey;
+                int[] recommendIndexs = new int[recommendNum];
 
-                try {
-                    URL url = new URL(urlAddress);
+                // 추천 영상 index 저장해둔 곳에서 index들 받아오기
+                myRef.child("ShowExerciseIndex").child("RecommendIndex").addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                //Log.println(Log.DEBUG,"debug", "----------------------------------------------------------------");
+                                //Log.println(Log.DEBUG,"debug",  snapshot.getValue().toString());
+                                for(int i = 0; i < recommendNum; i++) {
+                                    recommendIndexs[i] = Integer.parseInt(snapshot.child(Integer.toString(i)).getValue().toString());
+                                }
+                            }
 
-                    InputStream is = url.openStream();
-                    InputStreamReader isr = new InputStreamReader(is);
-                    BufferedReader reader = new BufferedReader(isr);
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
 
-                    StringBuffer buffer = new StringBuffer();
-                    String line = reader.readLine();
-                    while(line != null) {
-                        buffer.append(line + "\n");
-                        line = reader.readLine();
-                    }
+                            }
+                        }
+                );
 
-                    String jsonData = buffer.toString();
+                // 해당 index의 운동 영상 데이터 받아서 리스트에 추가
+                myRef.child("ExerciseData").addListenerForSingleValueEvent(
+                        new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                for(int i = 0; i < recommendNum; i++) {
+                                    //Log.println(Log.DEBUG,"debug", "----------------------------------------------------------------");
+                                    //Log.println(Log.DEBUG,"debug",  snapshot.getValue().toString());
 
-                    // jsonDate를 JSONObject의 형태로 변환
-                    JSONObject jsonObj = new JSONObject(jsonData);
+                                    // 파이어베이스에 저장된 해당 index의 운동 정보 중 유튜브 링크, 제목 받아오기
+                                    String mYoutubeURL = snapshot.child(Integer.toString(recommendIndexs[i])).child("YoutubeURL").getValue().toString();
+                                    String mYoutubeTitle = snapshot.child(Integer.toString(recommendIndexs[i])).child("YoutubeTitle").getValue().toString();
 
-                    // JSONObject에서 "data"의 JSONArray 추출
-                    JSONArray content = (JSONArray)jsonObj.get("data");
+                                    // 제목을 앞 16글자까지만 보이도록 수정
+                                    String mShortTitle = mYoutubeTitle.substring(0, 16) + "...";
 
-                    // 리스트에 youtube Url, 제목 정보 전달
-                    for(int i = 0; i < content.length(); i++) {
-                        // i번째 정보 가져오기
-                        JSONObject contentCut = content.getJSONObject(i);
+                                    Log.println(Log.DEBUG, "debug", "----------------------------------------------------------------");
+                                    Log.println(Log.DEBUG, "Data", mYoutubeURL + " " + mYoutubeTitle);
+                                    // 리스트에 Url, 제목 정보 추가
+                                    addItem(mYoutubeURL, mShortTitle);
+                                }
+                            }
 
-                        // URL, 제목 정보 추출
-                        String mYoutubeURL = contentCut.getString("동영상주소");
-                        String mYoutubeTitle = contentCut.getString("제목");
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
 
-                        // 제목을 앞 16글자까지만 보이도록 수정
-                        String mShortTitle = mYoutubeTitle.substring(0, 16) + "...";
-
-                        Log.println(Log.DEBUG,"Data", mYoutubeURL + " " + mYoutubeTitle);
-                        // 리스트에 Url, 제목 정보 추가
-                        addItem(mYoutubeURL, mShortTitle);
-                    }
-
-                    //Log.println(Log.DEBUG,"Test", "----------------------------------------------------------------");
-                    //Log.println(Log.DEBUG,"Data", content.toString());
-
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                            }
+                        }
+                );
             }
         });
-        apiThread.start();
+        getExerciseThread.start();
 
         // 데이터 가져오는 동안 로딩화면 뜨도록 -> 안 해주면 빈 화면이 될 수도
         try {
-            apiThread.join();
+            getExerciseThread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
 
-    // 영상 수평 리스트에 필요한 부분
+    // 추천 영상 수평 리스트에 필요한 부분
     public void firstInit(){
         mRecyclerView = (RecyclerView) v.findViewById(R.id.thumbnail_recyclerview);
         mList = new ArrayList<>();
     }
 
-    // 수평 리스트에 유튜브 썸네일, 제목 추가
+    // 추천 영상 수평 리스트에 유튜브 썸네일, 제목 추가
     public void addItem(String imgURL, String mainText){
         RecyclerViewItem item = new RecyclerViewItem();
 
@@ -233,4 +252,103 @@ public class MainFragment extends Fragment {
             e.printStackTrace();
         }
     }
+
+    // 추천 영상&광고 영상으로 띄울 영상 index 번호 임의로 저장
+    /*public void setAdvertiseVideo() {
+        // 파이어베이스 DB에 운동 정보 추가
+        // Write a message to the database
+        database = FirebaseDatabase.getInstance();         // 데이터베이스 선언, 할당
+        myRef = database.getReference("Pedal").child("ShowExerciseIndex");
+
+        // 광고 영상으로 띄울 영상 index 저장 = 임의로 아무 번호나 5개
+        myRef.child("AdvertiseIndex").child("0").setValue("2");
+        myRef.child("AdvertiseIndex").child("1").setValue("27");
+        myRef.child("AdvertiseIndex").child("2").setValue("104");
+        myRef.child("AdvertiseIndex").child("3").setValue("98");
+        myRef.child("AdvertiseIndex").child("4").setValue("135");
+
+        // 추천 영상으로 띄울 영상 index 저장 = 임의로 아무 번호나 7개 -> 나중에는 추천 알고리즘 통해서 추천할 수 있도록 변경
+        myRef.child("RecommendIndex").child("0").setValue("1");
+        myRef.child("RecommendIndex").child("1").setValue("2");
+        myRef.child("RecommendIndex").child("2").setValue("3");
+        myRef.child("RecommendIndex").child("3").setValue("4");
+        myRef.child("RecommendIndex").child("4").setValue("5");
+        myRef.child("RecommendIndex").child("5").setValue("6");
+        myRef.child("RecommendIndex").child("6").setValue("7");
+    }*/
+
+    // 운동 API에서 데이터 가져와서 Firebase Database에 저장
+    /*
+    public void setExerciseData() {
+        Thread apiThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                String serviceKey = "7VgAbrUNHG0BQOPUubAEEkOT45PoaRK6TR92eLuGBsfqyhspb%2BY1oOyrwqIeWXYGrSVw9vMreaGpnekwpR8pGw%3D%3D";
+                String limitPage = "247"; // 최대 247
+
+                String urlAddress = "https://api.odcloud.kr/api/15084814/v1/uddi:3f8d6b98-0082-4792-92a8-90d40ecc4bce"
+                        + "?page=1&perPage=" + limitPage + "&serviceKey=" + serviceKey;
+
+                try {
+                    URL url = new URL(urlAddress);
+
+                    InputStream is = url.openStream();
+                    InputStreamReader isr = new InputStreamReader(is);
+                    BufferedReader reader = new BufferedReader(isr);
+
+                    StringBuffer buffer = new StringBuffer();
+                    String line = reader.readLine();
+                    while(line != null) {
+                        buffer.append(line + "\n");
+                        line = reader.readLine();
+                    }
+
+                    String jsonData = buffer.toString();
+
+                    // jsonDate를 JSONObject의 형태로 변환
+                    JSONObject jsonObj = new JSONObject(jsonData);
+
+                    // JSONObject에서 "data"의 JSONArray 추출
+                    JSONArray content = (JSONArray)jsonObj.get("data");
+
+                    // 리스트에 정보 전달
+                    for(int i = 0; i < content.length(); i++) {
+                        // i번째 정보 가져오기
+                        JSONObject contentCut = content.getJSONObject(i);
+
+                        // 운동 정보 추출
+                        String mLargeCategory = contentCut.getString("대분류");
+                        String mMiddleCategory = contentCut.getString("중분류");
+                        String mSubCategory = contentCut.getString("소분류");
+                        String mYoutubeTitle = contentCut.getString("제목");
+                        String mYoutubeURL = contentCut.getString("동영상주소");
+
+                        //og.println(Log.DEBUG,"Data", mYoutubeURL + " " + mYoutubeTitle + " " + mLargeCategory);
+
+                        // 파이어베이스 DB에 운동 정보 추가
+                        // Write a message to the database
+                        database = FirebaseDatabase.getInstance();         // 데이터베이스 선언, 할당
+                        myRef = database.getReference("Pedal").child("ExerciseData").child(Integer.toString(i));
+
+                        myRef.child("LargeCategory").setValue(mLargeCategory);   // 대분류
+                        myRef.child("MiddleCategory").setValue(mMiddleCategory); // 중분류
+                        myRef.child("SubCategory").setValue(mSubCategory);       // 소분류
+                        myRef.child("YoutubeTitle").setValue(mYoutubeTitle);     // 유튜브 제목
+                        myRef.child("YoutubeURL").setValue(mYoutubeURL);         // 유튜브 링크
+                    }
+
+                    //Log.println(Log.DEBUG,"Test", "----------------------------------------------------------------");
+                    //Log.println(Log.DEBUG,"Data", content.toString());
+
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        apiThread.start();
+    }*/
 }
