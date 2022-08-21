@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import com.bicontest.pedal_sports_app.R;
+import com.bicontest.pedal_sports_app.UserInfoUpdataActivity;
 import com.bicontest.pedal_sports_app.users_sign.LoginActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
