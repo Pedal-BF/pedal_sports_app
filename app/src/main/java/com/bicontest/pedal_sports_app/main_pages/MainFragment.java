@@ -43,6 +43,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class MainFragment extends Fragment {
+    //https://github.com/sayyam/carouselview
 
     // 상수 선언
     private final int advertiseNum = 5; // 광고 영상 갯수
@@ -85,7 +86,7 @@ public class MainFragment extends Fragment {
         v = inflater.inflate(R.layout.fragment_main, container, false);
 
         //setExerciseData(); // API에서 운동 데이터 받아서 파이어베이스에 저장 - 저장해둠
-        //setAdvertiseVideo(); // 광고로 보여줄 영상 index 저장
+        //setAdvertiseVideo(); // 광고로 보여줄 영상 index 저장 - 저장해둠
 
         adSlideImage = v.findViewById(R.id.ad_slide);
 
@@ -166,7 +167,7 @@ public class MainFragment extends Fragment {
                                     String mShortTitle = mYoutubeTitle.substring(0, 16) + "...";
 
                                     Log.println(Log.DEBUG, "debug", "----------------------------------------------------------------");
-                                    Log.println(Log.DEBUG, "Data", mYoutubeURL + " " + mYoutubeTitle);
+                                    Log.println(Log.DEBUG, "Data", mYoutubeURL + " " + mShortTitle);
                                     // 리스트에 Url, 제목 정보 추가
                                     addItem(mYoutubeURL, mShortTitle);
                                 }
@@ -183,11 +184,11 @@ public class MainFragment extends Fragment {
         getExerciseThread.start();
 
         // 데이터 가져오는 동안 로딩화면 뜨도록 -> 안 해주면 빈 화면이 될 수도
-        try {
+        /*try {
             getExerciseThread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     // 추천 영상 수평 리스트에 필요한 부분
