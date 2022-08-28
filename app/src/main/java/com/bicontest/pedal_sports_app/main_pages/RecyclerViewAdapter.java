@@ -3,6 +3,7 @@ package com.bicontest.pedal_sports_app.main_pages;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,6 +73,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         holder.txt_main.setText(item.getMainText());  // 영상 제목
         //holder.txt_sub.setText(item.getSubText());
+
+        Log.println(Log.DEBUG, "debug", "----------------------------------------------------------------");
+        Log.println(Log.DEBUG, "Data", item.getImgURL() + " " + item.getMainText());
 
         // 영상 썸네일
         Thread mTread = new Thread() {
