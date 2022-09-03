@@ -46,8 +46,9 @@ public class MainFragment extends Fragment {
     //https://github.com/sayyam/carouselview
 
     // 상수 선언
-    private final int advertiseNum = 5; // 광고 영상 갯수
-    private final int recommendNum = 7; // 추천 영상 갯수
+    private final int allExerciseNum = 247; // 총 영상 갯수
+    private final int advertiseNum = 5;     // 광고 영상 갯수
+    private final int recommendNum = 7;     // 추천 영상 갯수
 
     private View v;
 
@@ -56,6 +57,9 @@ public class MainFragment extends Fragment {
     private Bitmap bitmap;
 
     // private ImageView recommedImage; // 추천 영상 이미지
+
+    // 운동 정보를 저장해둘 클래스
+    public ExerciseInfo[] mExerciseInfo = new ExerciseInfo[allExerciseNum];
 
     private String[] youtubeUrls = {
             "https://youtu.be/6AiSi3E3ifs",
@@ -88,6 +92,19 @@ public class MainFragment extends Fragment {
         //setExerciseData(); // API에서 운동 데이터 받아서 파이어베이스에 저장 - 저장해둠
         //setAdvertiseVideo(); // 광고로 보여줄 영상 index 저장 - 저장해둠
 
+        // 파이어베이스에서 운동 데이터 받아오기
+        getExerciseThread.start();
+
+        // 데이터 가져오는 동안 기다리기
+        try {
+            getExerciseThread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        //Log.println(Log.DEBUG, "debug", "----------------------------------------------------------------");
+        //Log.println(Log.DEBUG, "Data", mExerciseInfo[0].getYoutubeURL() + " " + mExerciseInfo[0].getYoutubeTitle());
+
         adSlideImage = v.findViewById(R.id.ad_slide);
 
         advertiseImageSet();
@@ -106,7 +123,7 @@ public class MainFragment extends Fragment {
         // 수평 리스트
         firstInit();
 
-        getExerciseInfo(); // 파이어베이스에서 운동 데이터 받아오기
+        setRecommendVideo(); // 추천 영상 정보 세팅
 
         // 리스트에 youtube Url, 제목 정보 전달
         /*for(int i = 0; i < 5; i++){
@@ -121,18 +138,61 @@ public class MainFragment extends Fragment {
         return v;
     }
 
+    // 파이어베이스에서 데이터 가져와서 클래스에 저장
+    Thread getExerciseThread = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            database = FirebaseDatabase.getInstance();                         // 데이터베이스 선언, 할당
+            myRef = database.getReference("Pedal").child("ExerciseData");
+
+            myRef.addListenerForSingleValueEvent(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            for(int i = 0; i < allExerciseNum; i++) {
+                                String mLargeCategory = snapshot.child(Integer.toString(i)).child("LargeCategory").getValue().toString();
+                                String mMiddleCategory = snapshot.child(Integer.toString(i)).child("MiddleCategory").getValue().toString();
+                                String mSubCategory = snapshot.child(Integer.toString(i)).child("SubCategory").getValue().toString();
+                                String mYoutubeTitle = snapshot.child(Integer.toString(i)).child("YoutubeTitle").getValue().toString();
+                                String mYoutubeURL = snapshot.child(Integer.toString(i)).child("YoutubeURL").getValue().toString();
+
+                                mExerciseInfo[i] = new ExerciseInfo(mLargeCategory, mMiddleCategory, mSubCategory, mYoutubeTitle, mYoutubeURL);
+                                //Log.println(Log.DEBUG, "debug", "----------------------------------------------------------------");
+                                //Log.println(Log.DEBUG, "Data", mExerciseInfo[i].YoutubeURL + " " + mExerciseInfo[i].YoutubeTitle);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+
+                        }
+                    }
+            );
+        }
+    });
+
     // 파이어베이스에서 데이터 가져와서 메인페이지에 보여주기
-    public void getExerciseInfo() {
-        Thread getExerciseThread = new Thread(new Runnable() {
+    public void setRecommendVideo() {
+        Thread getRecommendThread = new Thread(new Runnable() {
             @Override
             public void run() {
+                // 파이어베이스에서 데이터 가져오는 스레드가 종료될 때까지 기다리기
+                try {
+                    getExerciseThread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                Log.println(Log.DEBUG, "debug", "----------------------------------------------------------------");
+                Log.println(Log.DEBUG, "Data", "Check Recommend Thread Start!!!");
+
                 database = FirebaseDatabase.getInstance();         // 데이터베이스 선언, 할당
-                myRef = database.getReference("Pedal");
+                myRef = database.getReference("Pedal").child("ShowExerciseIndex").child("RecommendIndex");
 
                 int[] recommendIndexs = new int[recommendNum];
 
                 // 추천 영상 index 저장해둔 곳에서 index들 받아오기
-                myRef.child("ShowExerciseIndex").child("RecommendIndex").addListenerForSingleValueEvent(
+                myRef.addListenerForSingleValueEvent(
                         new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -149,39 +209,11 @@ public class MainFragment extends Fragment {
                             }
                         }
                 );
-
-                // 해당 index의 운동 영상 데이터 받아서 리스트에 추가
-                myRef.child("ExerciseData").addListenerForSingleValueEvent(
-                        new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                for(int i = 0; i < recommendNum; i++) {
-                                    //Log.println(Log.DEBUG,"debug", "----------------------------------------------------------------");
-                                    //Log.println(Log.DEBUG,"debug",  snapshot.getValue().toString());
-
-                                    // 파이어베이스에 저장된 해당 index의 운동 정보 중 유튜브 링크, 제목 받아오기
-                                    String mYoutubeURL = snapshot.child(Integer.toString(recommendIndexs[i])).child("YoutubeURL").getValue().toString();
-                                    String mYoutubeTitle = snapshot.child(Integer.toString(recommendIndexs[i])).child("YoutubeTitle").getValue().toString();
-
-                                    // 제목을 앞 16글자까지만 보이도록 수정
-                                    String mShortTitle = mYoutubeTitle.substring(0, 16) + "...";
-
-                                    Log.println(Log.DEBUG, "debug", "----------------------------------------------------------------");
-                                    Log.println(Log.DEBUG, "Data", mYoutubeURL + " " + mShortTitle);
-                                    // 리스트에 Url, 제목 정보 추가
-                                    addItem(mYoutubeURL, mShortTitle);
-                                }
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        }
-                );
+                //Log.println(Log.DEBUG, "debug", "----------------------------------------------------------------");
+                //Log.println(Log.DEBUG, "Data", mExerciseInfo[0]);
             }
         });
-        getExerciseThread.start();
+        getRecommendThread.start();
 
         // 데이터 가져오는 동안 로딩화면 뜨도록 -> 안 해주면 빈 화면이 될 수도
         /*try {
