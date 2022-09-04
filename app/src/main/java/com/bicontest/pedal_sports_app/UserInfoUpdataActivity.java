@@ -80,7 +80,7 @@ public class UserInfoUpdataActivity extends AppCompatActivity {
         storageRef.child("profile_img/" + filename).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                Glide.with((getApplicationContext()))
+                Glide.with(getApplicationContext())
                         .load(uri)
                         .into(mIvProfile);
             }
